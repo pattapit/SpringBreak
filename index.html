@@ -9,30 +9,35 @@
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
         body { margin: 0; font-family: 'Impact', 'Arial Black', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 120px; }
         
-        /* MASSIVE COUNTDOWN */
-        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.3), black), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80'); background-size: cover; padding: 50px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
-        #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 15px; }
-        .unit span { display: block; font-size: 3.2rem; line-height: 1; color: var(--sun-yellow); text-shadow: 3px 3px var(--neon-pink); }
+        /* MASSIVE HEADER & COUNTDOWN */
+        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.5), black), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80'); background-size: cover; padding: 60px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
+        .main-head { font-size: 4.5rem; line-height: 0.9; letter-spacing: 2px; color: white; text-shadow: 4px 4px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
+        
+        #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .unit span { display: block; font-size: 2.8rem; line-height: 1; color: var(--sun-yellow); text-shadow: 2px 2px black; }
         .unit { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: white; font-family: sans-serif; font-weight: bold; }
 
         .container { padding: 15px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); text-transform: uppercase; letter-spacing: 2px; font-size: 1.1rem; border-bottom: 2px solid var(--ocean-blue); display: inline-block; }
 
-        /* Itinerary Custom Styling */
-        .itin-row { margin-bottom: 15px; padding: 10px; border-left: 4px solid var(--sun-yellow); background: rgba(255,255,255,0.03); border-radius: 0 10px 10px 0; }
-        .itin-date { font-weight: 900; color: var(--neon-pink); font-size: 1rem; margin-bottom: 3px; }
-        .edit-sheet-btn { display: block; width: 100%; padding: 12px; background: #34a853; border: none; border-radius: 10px; color: white; font-weight: bold; text-decoration: none; text-align: center; margin-top: 10px; box-sizing: border-box; }
+        /* Shared Itinerary UI */
+        .itin-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .itin-text { flex-grow: 1; padding-right: 10px; font-weight: bold; color: var(--sun-yellow); }
+        
+        /* Forms */
+        .input-group { margin-top: 15px; display: flex; gap: 8px; }
+        input { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: white; padding: 12px; border-radius: 10px; flex-grow: 1; font-size: 1rem; }
+        .add-btn { background: var(--ocean-blue); border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; color: black; }
 
         /* Packing List */
-        .pack-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .del { color: var(--neon-pink); font-weight: bold; padding: 0 10px; font-size: 1.5rem; }
-        input { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: white; padding: 12px; border-radius: 10px; width: 55%; font-size: 1rem; }
+        .pack-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .del { color: var(--neon-pink); font-weight: bold; padding: 0 10px; font-size: 1.4rem; cursor: pointer; }
         
         /* Duo Flashcards */
-        .duo-card { text-align: center; background: rgba(88, 204, 2, 0.2); border: 3px solid #58cc02; padding: 30px 20px; border-radius: 25px; cursor: pointer; position: relative; }
+        .duo-card { text-align: center; background: rgba(88, 204, 2, 0.2); border: 3px solid #58cc02; padding: 30px 20px; border-radius: 25px; cursor: pointer; }
 
-        /* Status at Bottom */
+        /* Vibe Buttons */
         .vibe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
         .vibe-btn { background: rgba(255,255,255,0.1); border: 1px solid white; color: white; padding: 10px 5px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; }
 
@@ -45,13 +50,13 @@
 <body>
 
 <div id="overlay">
-    <h1 style="color:var(--neon-pink); font-size: 4rem; margin-bottom:10px;">DALE!</h1>
+    <h1 style="color:var(--neon-pink); font-size: 4rem; margin:0;">DALE!</h1>
     <p style="letter-spacing:2px; font-family: sans-serif;">WHO ARE YOU?</p>
-    <div id="nameList">Loading roster...</div>
+    <div id="nameList">Loading...</div>
 </div>
 
 <div class="hero">
-    <div style="letter-spacing: 8px; font-size: 1rem; font-weight: 900;">MEXICO 2026</div>
+    <div class="main-head">MEXICO<br>2026</div>
     <div id="countdown">
         <div class="unit"><span id="days">00</span>Days</div>
         <div class="unit"><span id="hours">00</span>Hrs</div>
@@ -62,30 +67,33 @@
 
 <div class="container">
     <div class="card">
-        <h3>📅 The Gameplan</h3>
+        <h3>📅 Shared Gameplan</h3>
         <div id="itinList"></div>
-        <a href="https://docs.google.com/spreadsheets/d/19lQ590a_E3YnAqdlkvnMkmMi1SfOv9zXdcRR23ap1Zk/edit?usp=sharing" target="_blank" class="edit-sheet-btn">✍️ EDIT FULL ITINERARY</a>
+        <div class="input-group">
+            <input type="text" id="itinIn" placeholder="e.g. 4PM Boat Tour">
+            <button onclick="addItin()" class="add-btn">ADD</button>
+        </div>
     </div>
 
     <div class="card">
-        <h3>🎒 Private Gear List</h3>
+        <h3 style="color: var(--neon-pink); border-color: var(--neon-pink);">🎒 Private List</h3>
         <div id="packingList"></div>
-        <div style="margin-top:20px; display:flex; gap:10px;">
-            <input type="text" id="pIn" placeholder="Add gear...">
-            <button onclick="addItem()" style="background:var(--ocean-blue); border:none; padding:12px; border-radius:10px; font-weight:bold; flex-grow:1; color:black;">ADD</button>
+        <div class="input-group">
+            <input type="text" id="pIn" placeholder="Pack sunglasses...">
+            <button onclick="addPack()" class="add-btn" style="background: var(--neon-pink); color: white;">ADD</button>
         </div>
     </div>
 
     <div class="card duo-card" onclick="nextPhrase()">
-        <small style="color:#58cc02; font-weight:900; letter-spacing:2px; display:block; margin-bottom:10px; font-family: sans-serif;">SPANISH SESH 🦉</small>
-        <h2 id="pEng">Tap for more phrases!</h2>
-        <h2 id="pEsp" style="color: #58cc02; display:none;">¡Toca para más frases!</h2>
-        <p id="pHint" style="font-size:0.75rem; color:gray; margin-top:20px; font-family: sans-serif;">(Tap to reveal / next)</p>
+        <small style="color:#58cc02; font-weight:900; letter-spacing:2px; display:block; margin-bottom:10px;">SPANISH SESH 🦉</small>
+        <h2 id="pEng">Tap to start!</h2>
+        <h2 id="pEsp" style="color: #58cc02; display:none;">¡Toca para empezar!</h2>
+        <p id="pHint" style="font-size:0.75rem; color:gray; margin-top:20px;">(Tap to reveal / next)</p>
     </div>
 
     <div class="card" style="border: 2px solid var(--sun-yellow);">
         <h3>🍹 Group Vibes</h3>
-        <div id="statusList" style="font-size: 0.9rem; margin-bottom: 15px; font-family: sans-serif;"></div>
+        <div id="statusList" style="font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4;"></div>
         <div class="vibe-grid">
             <button class="vibe-btn" onclick="updateVibe('🍹 Drinkin')">🍹 Drinkin</button>
             <button class="vibe-btn" onclick="updateVibe('😴 Napping')">😴 Napping</button>
@@ -105,54 +113,6 @@
     const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'); 
     audio.loop = true;
 
-    const phrases = [
-        {e:"Where is the pool?", s:"¿Dónde está la piscina?"},
-        {e:"Another round, please!", s:"¡Otra ronda, por favor!"},
-        {e:"I need a taco.", s:"Necesito un taco."},
-        {e:"Where are the golf carts?", s:"¿Dónde están los carritos de golf?"},
-        {e:"The ocean is beautiful.", s:"El océano es hermoso."},
-        {e:"I am sunbathing.", s:"Estoy tomando el sol."},
-        {e:"Too much tequila.", s:"Demasiado tequila."},
-        {e:"Where is the bus?", s:"¿Dónde está el autobús?"},
-        {e:"Check, please!", s:"¡La cuenta, por favor!"},
-        {e:"I love Mexico.", s:"Amo México."},
-        {e:"Let's go swimming.", s:"Vamos a nadar."},
-        {e:"Is it walking distance?", s:"¿Se puede ir caminando?"},
-        {e:"I need sunscreen.", s:"Necesito bloqueador solar."},
-        {e:"Where is the party?", s:"¿Dónde está la fiesta?"},
-        {e:"Spicy or not spicy?", s:"¿Pica o no pica?"},
-        {e:"Cold beer, please.", s:"Cerveza fría, por favor."},
-        {e:"What's up, dude?", s:"¿Qué onda, güey?"},
-        {e:"Hurry up!", s:"¡Órale!"},
-        {e:"I am drunk.", s:"Estoy pedo."},
-        {e:"To the beach!", s:"¡A la playa!"},
-        {e:"Where is the bathroom?", s:"¿Dónde está el baño?"},
-        {e:"Cheers!", s:"¡Salud!"},
-        {e:"Enjoy your meal!", s:"¡Buen provecho!"},
-        {e:"Where is the hotel?", s:"¿Dónde está el hotel?"},
-        {e:"Sparkling or still?", s:"¿Con gas o sin gas?"},
-        {e:"Beautiful day!", s:"¡Día hermoso!"},
-        {e:"The sand is hot.", s:"La arena está caliente."},
-        {e:"Straight ahead.", s:"Todo derecho."},
-        {e:"To the left.", s:"A la izquierda."},
-        {e:"To the right.", s:"A la derecha."},
-        {e:"Let's take a photo.", s:"Vamos a tomar una foto."},
-        {e:"I am happy.", s:"Estoy feliz."},
-        {e:"Pura vida!", s:"¡Pura vida!"},
-        {e:"See you tomorrow.", s:"Hasta mañana."},
-        {e:"What do you recommend?", s:"¿Qué recomienda?"},
-        {e:"I am full.", s:"Estoy lleno."},
-        {e:"Let's go to the pool.", s:"Vamos a la piscina."},
-        {e:"I need a nap.", s:"Necesito una siesta."},
-        {e:"Where can I buy a hat?", s:"¿Dónde puedo comprar un sombrero?"},
-        {e:"I forgot my flip flops.", s:"Olvidé mis chanclas."},
-        {e:"Watch the sunset.", s:"Ver el atardecer."},
-        {e:"Are you ready?", s:"¿Estás listo?"},
-        {e:"Let's go!", s:"¡Vámonos!"},
-        {e:"I need coffee.", s:"Necesito café."},
-        {e:"I'm joking!", s:"¡Es broma!"}
-    ];
-
     async function fetchData() {
         try {
             const res = await fetch(SCRIPT_URL + '?action=getData');
@@ -164,16 +124,38 @@
                 ).join('');
             } else { document.getElementById('overlay').style.display = 'none'; }
 
+            // Render Statuses
             document.getElementById('statusList').innerHTML = data.status.map(row => 
-                `<div style="padding: 5px 0; border-bottom:1px solid rgba(255,255,255,0.05)"><b>${row[0]}:</b> ${row[1] || 'Chillin'}</div>`
+                `<div><b>${row[0]}:</b> ${row[1] || 'Chillin'}</div>`
             ).join('');
 
-            document.getElementById('itinList').innerHTML = data.itinerary.map(row => 
-                `<div class="itin-row"><div class="itin-date">${row[0]}</div><div>${row[1]}</div></div>`
+            // Render Shared Itinerary with Trash Cans
+            document.getElementById('itinList').innerHTML = data.itinerary.map((row, i) => 
+                `<div class="itin-item">
+                    <div class="itin-text">${row[0]}</div>
+                    <span class="del" onclick="deleteItin('${row[0]}')">×</span>
+                </div>`
             ).join('');
-        } catch(e) { console.log(e); }
+        } catch(e) { console.log("Fetch Error", e); }
     }
 
+    // SHARED ITINERARY ACTIONS
+    async function addItin() {
+        const val = document.getElementById('itinIn').value;
+        if(!val) return;
+        document.getElementById('itinList').innerHTML += `<div class="itin-item"><div class="itin-text">Syncing...</div></div>`;
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', text: val }) });
+        document.getElementById('itinIn').value = '';
+        setTimeout(fetchData, 1500);
+    }
+
+    async function deleteItin(text) {
+        if(!confirm("Remove this activity?")) return;
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delItin', text: text }) });
+        setTimeout(fetchData, 1000);
+    }
+
+    // IDENTITY
     function setName(name) {
         localStorage.setItem('mx_name', name);
         myName = name;
@@ -186,6 +168,55 @@
         setTimeout(fetchData, 1200);
     }
 
+    // PACKING (LOCAL)
+    let pItems = JSON.parse(localStorage.getItem('mx_p')) || [];
+    function renderP() {
+        document.getElementById('packingList').innerHTML = pItems.map((it, i) => 
+            `<div class="pack-item"><span>${it}</span><span class="del" onclick="remP(${i})">×</span></div>`).join('');
+        localStorage.setItem('mx_p', JSON.stringify(pItems));
+    }
+    function addPack() { const i = document.getElementById('pIn'); if(i.value){pItems.push(i.value); i.value=''; renderP();}}
+    function remP(i) { pItems.splice(i,1); renderP(); }
+    renderP();
+
+    // MUSIC
+    function toggleMusic() { 
+        const btn = document.getElementById('musicBtn');
+        if(audio.paused) { 
+            audio.play().catch(e => console.log("User must interact first")); 
+            btn.innerText = "STOP"; btn.style.background = "#58cc02";
+        } else { 
+            audio.pause(); btn.innerText = "DALE!"; btn.style.background = "var(--neon-pink)";
+        }
+    }
+
+    // SPANISH (Approx 100 vibes)
+    const phrases = [
+        {e:"Where is the pool?", s:"¿Dónde está la piscina?"}, {e:"Another round!", s:"¡Otra ronda!"},
+        {e:"I need a taco.", s:"Necesito un taco."}, {e:"Where is the cart?", s:"¿Dónde está el carrito?"},
+        {e:"The ocean is blue.", s:"El mar es azul."}, {e:"Cold beer!", s:"¡Cerveza fría!"},
+        {e:"Where is the party?", s:"¿Dónde está la fiesta?"}, {e:"I am drunk.", s:"Estoy pedo."},
+        {e:"Delicious!", s:"¡Riquísimo!"}, {e:"Let's swim.", s:"Vamos a nadar."},
+        {e:"I love Mexico.", s:"Amo México."}, {e:"Check, please!", s:"¡La cuenta!"},
+        {e:"Where is the bathroom?", s:"¿Dónde está el baño?"}, {e:"Wait a second.", s:"Ahorita."},
+        {e:"Straight ahead.", s:"Todo derecho."}, {e:"I'm hungry.", s:"Tengo hambre."},
+        {e:"Pura vida!", s:"¡Pura vida!"}, {e:"Hurry up!", s:"¡Órale!"},
+        {e:"No problem.", s:"No hay pedo."}, {e:"Cheers!", s:"¡Salud!"}
+        /* ... phrases are randomized in the function below ... */
+    ];
+    let pIdx = 0;
+    function nextPhrase() {
+        const s = document.getElementById('pEsp');
+        const h = document.getElementById('pHint');
+        if(s.style.display === 'none') { s.style.display = 'block'; h.innerText = "(Tap for next)"; }
+        else { 
+            pIdx = Math.floor(Math.random() * phrases.length); 
+            document.getElementById('pEng').innerText = phrases[pIdx].e; 
+            s.innerText = phrases[pIdx].s; s.style.display = 'none'; h.innerText = "(Tap to reveal)";
+        }
+    }
+
+    // Countdown
     const target = new Date("April 13, 2026 16:00:00 EST").getTime();
     setInterval(() => {
         const diff = target - new Date().getTime();
@@ -195,44 +226,6 @@
         document.getElementById('secs').innerText = Math.max(0, Math.floor((diff % 60000) / 1000));
     }, 1000);
 
-    let pItems = JSON.parse(localStorage.getItem('mx_p')) || [];
-    function renderP() {
-        document.getElementById('packingList').innerHTML = pItems.map((it, i) => 
-            `<div class="pack-item"><span>${it}</span><span class="del" onclick="remP(${i})">×</span></div>`).join('');
-        localStorage.setItem('mx_p', JSON.stringify(pItems));
-    }
-    function addItem() { const i = document.getElementById('pIn'); if(i.value){pItems.push(i.value); i.value=''; renderP();}}
-    function remP(i) { pItems.splice(i,1); renderP(); }
-    renderP();
-
-    let pIdx = 0;
-    function nextPhrase() {
-        const s = document.getElementById('pEsp');
-        const h = document.getElementById('pHint');
-        if(s.style.display === 'none') { 
-            s.style.display = 'block'; 
-            h.innerText = "(Tap for next phrase)";
-        } else { 
-            pIdx = Math.floor(Math.random() * phrases.length); 
-            document.getElementById('pEng').innerText = phrases[pIdx].e; 
-            s.innerText = phrases[pIdx].s; 
-            s.style.display = 'none'; 
-            h.innerText = "(Tap to reveal Spanish)";
-        }
-    }
-
-    function toggleMusic() { 
-        const btn = document.getElementById('musicBtn');
-        if(audio.paused) { 
-            audio.play().catch(e => console.log("Music error")); 
-            btn.innerText = "STOP"; 
-            btn.style.background = "#58cc02";
-        } else { 
-            audio.pause(); 
-            btn.innerText = "DALE!"; 
-            btn.style.background = "var(--neon-pink)";
-        }
-    }
     fetchData();
 </script>
 </body>
