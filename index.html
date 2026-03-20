@@ -6,7 +6,7 @@
     <title>MEXICO 2026</title>
     <style>
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
-        body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 120px; }
+        body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 120px; overflow-x: hidden; }
         .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 60px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
         .main-head { font-size: 5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
@@ -18,7 +18,7 @@
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
         .day-header { color: var(--neon-pink); font-size: 2rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; }
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .itin-time { color: var(--ocean-blue); font-weight: 900; width: 90px; font-size: 1rem; flex-shrink: 0; }
+        .itin-time { color: var(--ocean-blue); font-weight: 900; width: 95px; font-size: 1rem; flex-shrink: 0; }
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; }
         .pack-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
         .form-box { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
@@ -64,7 +64,7 @@
                 </select>
                 <input type="text" id="inTime" placeholder="3:00 PM" style="width:40%;">
             </div>
-            <input type="text" id="inAct" placeholder="What we doing?">
+            <input type="text" id="inAct" placeholder="What are we doing?">
             <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
@@ -79,7 +79,7 @@
     </div>
 
     <div class="card">
-        <h3 style="color:var(--sun-yellow); border-color:var(--sun-yellow);">🍹 VIBES</h3>
+        <h3 style="color:var(--sun-yellow); border-color:var(--sun-yellow);">🍹 GROUP VIBES</h3>
         <div id="statusList"></div>
         <div class="vibe-grid">
             <button class="vibe-btn" onclick="updateVibe('🍹 Drinkin')">🍹 Drinkin</button>
@@ -92,18 +92,55 @@
 <button class="dale-fab" id="musicBtn" onclick="toggleMusic()">DALE!</button>
 
 <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4V8qW4taO4uwuyJvPjMts_E14mLIF3Ltj5wh9UVNwGf9GfAuKabTdXs6LxyEmM6F9/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMOXrS-s6pIBlrHnaZxPSoojFoQMU-Z2rK-GrKLb41WqZk52xU1Yfm-ZdWKgzQXbdR/exec'; 
     let myName = localStorage.getItem('mx_name');
-    let audio = new Audio('https://cdn.pixabay.com/audio/2022/10/14/audio_9939f770f7.mp3'); 
+    
+    // Music setup
+    const audio = new Audio('https://cdn.pixabay.com/audio/2022/10/14/audio_9939f770f7.mp3'); 
     audio.loop = true;
 
     function toggleMusic() { 
         const btn = document.getElementById('musicBtn');
         if (audio.paused) { 
-            audio.play().then(() => { btn.innerText = "STOP"; btn.style.background = "#58cc02"; });
+            audio.play().then(() => {
+                btn.innerText = "STOP"; 
+                btn.style.background = "#58cc02"; 
+            }).catch(e => alert("Tap screen first!"));
         } else { 
-            audio.pause(); btn.innerText = "DALE!"; btn.style.background = "var(--neon-pink)"; 
+            audio.pause(); 
+            btn.innerText = "DALE!"; 
+            btn.style.background = "var(--neon-pink)"; 
         }
+    }
+
+    function renderItinerary(rows) {
+        const listDiv = document.getElementById('itinList');
+        listDiv.innerHTML = '';
+        const grouped = {};
+        if (!rows || rows.length < 2) return;
+
+        // Skip header row
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const d = row[0], t = row[1], a = row[2];
+            if (!a) continue;
+            if (!grouped[d]) grouped[d] = [];
+            grouped[d].push({ t, a });
+        }
+
+        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
+            if (grouped[day]) {
+                listDiv.innerHTML += `<div class="day-header">${day}</div>`;
+                grouped[day].forEach(item => {
+                    listDiv.innerHTML += `
+                    <div class="itin-row">
+                        <span class="itin-time">${item.t || '--'}</span>
+                        <span class="itin-act">${item.a}</span>
+                        <span class="del" onclick="deleteItin('${item.a}')">×</span>
+                    </div>`;
+                });
+            }
+        });
     }
 
     async function fetchData() {
@@ -117,30 +154,11 @@
         renderItinerary(data.itinerary);
     }
 
-    function renderItinerary(rows) {
-        const listDiv = document.getElementById('itinList');
-        listDiv.innerHTML = '';
-        const grouped = {};
-        rows.forEach(r => {
-            if(!r[2]) return;
-            if(!grouped[r[0]]) grouped[r[0]] = [];
-            grouped[r[0]].push({ time: r[1], act: r[2] });
-        });
-        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
-            if (grouped[day]) {
-                listDiv.innerHTML += `<div class="day-header">${day}</div>`;
-                grouped[day].forEach(item => {
-                    listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time || '--'}</span><span class="itin-act">${item.act}</span><span class="del" onclick="deleteItin('${item.act}')">×</span></div>`;
-                });
-            }
-        });
-    }
-
     async function addItin() {
         const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value;
         if(!a) return;
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', day: d, time: t, activity: a }) });
         document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', day: d, time: t, activity: a }) });
         setTimeout(fetchData, 1200);
     }
 
@@ -150,6 +168,7 @@
         setTimeout(fetchData, 1000);
     }
 
+    // Packing
     let pItems = JSON.parse(localStorage.getItem('mx_p')) || [];
     function renderP() {
         document.getElementById('packingList').innerHTML = pItems.map((it, i) => `<div class="pack-item"><span>${it}</span><span class="del" onclick="remP(${i})">×</span></div>`).join('');
