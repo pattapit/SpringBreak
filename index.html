@@ -2,23 +2,25 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMOXrS-s6pIBlrHnaZxPSoojFoQMU-Z2rK-GrKLb41WqZk52xU1Yfm-ZdWKgzQXbdR/exec'; 
     let myName = localStorage.getItem('mx_name');
     
-    // Fixed Audio Setup
+    // Setup Audio
     const audio = new Audio('https://cdn.pixabay.com/audio/2022/10/14/audio_9939f770f7.mp3'); 
     audio.loop = true;
+
+    // This "unlocks" the audio context on the first touch
+    document.body.addEventListener('touchstart', function() {
+        audio.play().then(() => {
+            audio.pause();
+        }).catch(e => console.log("Waiting for Dale tap"));
+    }, { once: true });
 
     function toggleMusic() { 
         const btn = document.getElementById('musicBtn');
         if (audio.paused) { 
-            // Aggressive play attempt
             audio.play().then(() => {
                 btn.innerText = "STOP"; 
                 btn.style.background = "#58cc02"; 
             }).catch(e => {
-                // If it fails, we try a silent reload to "wake up" the audio context
-                audio.load();
-                audio.play();
-                btn.innerText = "STOP";
-                btn.style.background = "#58cc02";
+                btn.innerText = "TAP SCREEN";
             });
         } else { 
             audio.pause(); 
@@ -35,10 +37,9 @@
 
         for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
-            const d = row[0], t = row[1], a = row[2];
-            if (!a) continue;
-            if (!grouped[d]) grouped[d] = [];
-            grouped[d].push({ t, a });
+            if (!row[2]) continue;
+            if (!grouped[row[0]]) grouped[row[0]] = [];
+            grouped[row[0]].push({ t: row[1], a: row[2] });
         }
 
         ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
@@ -70,8 +71,8 @@
     async function addItin() {
         const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value;
         if(!a) return;
-        document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', day: d, time: t, activity: a }) });
+        document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
         setTimeout(fetchData, 1200);
     }
 
@@ -81,7 +82,6 @@
         setTimeout(fetchData, 1000);
     }
 
-    // Packing
     let pItems = JSON.parse(localStorage.getItem('mx_p')) || [];
     function renderP() {
         document.getElementById('packingList').innerHTML = pItems.map((it, i) => `<div class="pack-item"><span>${it}</span><span class="del" onclick="remP(${i})">×</span></div>`).join('');
@@ -97,7 +97,7 @@
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
     
-    // Weather Loader with Fahrenheit (Freedom Units)
+    // Weather with US Units (Fahrenheit)
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 
     setInterval(() => {
