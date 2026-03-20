@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mexico 2026 | DALE!</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff007f">
+    <style>
+        :root {
+            --neon-pink: #ff007f;
+            --ocean-blue: #00d4ff;
+            --sun-yellow: #fdbb2d;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            margin: 0; font-family: 'Avenir', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white; min-height: 100vh; padding-bottom: 80px;
+        }
+        .container { padding: 20px; }
+        .header { text-align: center; padding: 30px 0; font-weight: 900; font-size: 2rem; letter-spacing: 4px; color: var(--sun-yellow); text-shadow: 2px 2px var(--neon-pink); }
+        
+        /* Countdown */
+        #countdown { display: flex; justify-content: space-around; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid var(--neon-pink); margin-bottom: 20px; backdrop-filter: blur(5px); }
+        .unit span { display: block; font-size: 1.8rem; font-weight: bold; color: var(--ocean-blue); }
+        .unit { font-size: 0.7rem; text-transform: uppercase; }
+
+        /* Packing List */
+        .card { background: var(--glass); padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        .pack-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .delete-btn { background: none; border: none; color: var(--neon-pink); font-size: 1.2rem; cursor: pointer; }
+        
+        /* Duo Spanish Section */
+        .duo-box { text-align: center; cursor: pointer; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; border-left: 5px solid #58cc02; }
+
+        input { background: rgba(255,255,255,0.1); border: 1px solid var(--ocean-blue); color: white; padding: 12px; border-radius: 10px; width: calc(100% - 80px); }
+        .btn { background: var(--ocean-blue); border: none; padding: 12px; border-radius: 10px; color: black; font-weight: bold; }
+        .dale-fab { position: fixed; bottom: 20px; right: 20px; width: 70px; height: 70px; border-radius: 50%; background: var(--neon-pink); border: none; color: white; font-weight: 900; box-shadow: 0 0 20px var(--neon-pink); z-index: 1000; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">MEXICO 2026</div>
+
+    <div id="countdown">
+        <div class="unit"><span id="days">00</span>Days</div>
+        <div class="unit"><span id="hours">00</span>Hrs</div>
+        <div class="unit"><span id="mins">00</span>Mins</div>
+        <div class="unit"><span id="secs">00</span>Secs</div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">✈️ Shared Itinerary</h3>
+        <div id="itineraryContent">Loading the plan...</div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0; color: var(--ocean-blue);">🎒 My Private List</h3>
+        <div id="packingList"></div>
+        <div style="margin-top:15px; display:flex; gap:5px;">
+            <input type="text" id="itemIn" placeholder="Add gear...">
+            <button class="btn" onclick="addItem()">ADD</button>
+        </div>
+        <button onclick="clearAll()" style="background:none; border:none; color:gray; font-size:0.7rem; margin-top:10px;">Reset List</button>
+    </div>
+
+    <div class="card duo-box" onclick="nextPhrase()">
+        <small>SPANISH SESH 🦉</small>
+        <h2 id="phraseEng">Ready for a round?</h2>
+        <h3 id="phraseEsp" style="color: #58cc02; visibility: hidden;">¿Listo para una ronda?</h3>
+        <p style="font-size:0.7rem; color:gray;">(Tap to flip / next)</p>
+    </div>
+</div>
+
+<button class="dale-fab" onclick="toggleMusic()">DALE!</button>
+
+<script>
+    // 1. COUNTDOWN (April 13, 4PM EST)
+    const targetDate = new Date("April 13, 2026 16:00:00 EST").getTime();
+    setInterval(() => {
+        const diff = targetDate - new Date().getTime();
+        document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        document.getElementById('secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+    }, 1000);
+
+    // 2. PRIVATE PACKING LIST
+    let myItems = JSON.parse(localStorage.getItem('mx_pack')) || [];
+    function renderPack() {
+        const container = document.getElementById('packingList');
+        container.innerHTML = myItems.map((item, i) => `
+            <div class="pack-item">
+                <span>${item}</span>
+                <button class="delete-btn" onclick="removeItem(${i})">×</button>
+            </div>
+        `).join('');
+        localStorage.setItem('mx_pack', JSON.stringify(myItems));
+    }
+    function addItem() {
+        const input = document.getElementById('itemIn');
+        if(input.value) { myItems.push(input.value); input.value=''; renderPack(); }
+    }
+    function removeItem(i) { myItems.splice(i, 1); renderPack(); }
+    function clearAll() { if(confirm("Clear list?")) { myItems = []; renderPack(); } }
+    renderPack();
+
+    // 3. DUO SESH
+    const phrases = [
+        {e: "Where is the pool?", s: "¿Dónde está la piscina?"},
+        {e: "Another round, please!", s: "¡Otra ronda, por favor!"},
+        {e: "I don't speak Spanish well.", s: "No hablo español bien."},
+        {e: "The check, please.", s: "La cuenta, por favor."}
+    ];
+    let pIdx = 0;
+    function nextPhrase() {
+        const esp = document.getElementById('phraseEsp');
+        if(esp.style.visibility === 'hidden') {
+            esp.style.visibility = 'visible';
+        } else {
+            pIdx = (pIdx + 1) % phrases.length;
+            document.getElementById('phraseEng').innerText = phrases[pIdx].e;
+            esp.innerText = phrases[pIdx].s;
+            esp.style.visibility = 'hidden';
+        }
+    }
+
+    // 4. MUSIC
+    const track = new Audio('https://www.bensound.com/bensound-music/bensound-energy.mp3'); // High energy loop
+    track.loop = true;
+    function toggleMusic() {
+        track.paused ? track.play() : track.pause();
+        document.querySelector('.dale-fab').style.background = track.paused ? 'var(--neon-pink)' : '#58cc02';
+    }
+</script>
+</body>
+</html>
