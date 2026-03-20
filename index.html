@@ -6,49 +6,47 @@
     <title>MEXICO 2026 | DALE!</title>
     <style>
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
-        body { margin: 0; font-family: 'Impact', 'Arial Black', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 120px; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 120px; }
         
-        /* MASSIVE HEADER & COUNTDOWN */
         .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.5), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 70px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
-        .main-head { font-size: 5.5rem; line-height: 0.85; letter-spacing: 2px; color: white; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 25px; text-transform: uppercase; }
+        .main-head { font-size: 5.5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 25px; text-transform: uppercase; }
         
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; }
-        .unit span { display: block; font-size: 3rem; line-height: 1; color: var(--sun-yellow); text-shadow: 2px 2px black; }
-        .unit { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: white; font-weight: bold; }
+        .unit span { display: block; font-size: 3rem; color: var(--sun-yellow); text-shadow: 2px 2px black; }
+        .unit { font-size: 0.75rem; font-weight: bold; }
 
-        .container { padding: 15px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        .container { padding: 15px; font-family: sans-serif; text-align: left; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
-        h3 { margin: 0 0 15px 0; color: var(--ocean-blue); text-transform: uppercase; letter-spacing: 2px; font-size: 1.2rem; border-bottom: 2px solid var(--ocean-blue); display: inline-block; font-family: 'Impact'; }
+        h3 { margin: 0 0 15px 0; color: var(--ocean-blue); letter-spacing: 2px; font-size: 1.2rem; border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
 
-        /* STRUCTURED ITINERARY */
-        .day-header { color: var(--neon-pink); font-family: 'Impact'; font-size: 2rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; letter-spacing: 1px; }
+        /* ITINERARY STYLES */
+        .day-header { color: var(--neon-pink); font-size: 2rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; }
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .itin-time { color: var(--ocean-blue); font-weight: 900; width: 85px; font-size: 0.95rem; flex-shrink: 0; }
-        .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; color: #fff; }
+        .itin-time { color: var(--ocean-blue); font-weight: 900; width: 85px; font-size: 1rem; flex-shrink: 0; }
+        .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; }
         
-        /* 3-FIELD FORM */
-        .form-box { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; border: 1px solid var(--ocean-blue); }
-        .form-row { display: flex; gap: 10px; }
-        input, select { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 12px; border-radius: 10px; font-size: 1rem; outline: none; }
-        select { flex: 1; color: white; background-color: #222; }
-        .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.3rem; color: #000; margin-top: 5px; cursor: pointer; text-transform: uppercase; }
+        /* PACKING LIST STYLES */
+        .pack-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
 
-        .del { color: var(--neon-pink); font-size: 1.8rem; cursor: pointer; padding-left: 10px; line-height: 1; }
-        
+        /* FORM STYLES */
+        .form-box { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; font-size: 1rem; }
+        .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; color: #000; cursor: pointer; }
+
+        .del { color: var(--neon-pink); font-size: 1.8rem; cursor: pointer; padding-left: 10px; }
         .vibe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
         .vibe-btn { background: rgba(255,255,255,0.1); border: 1px solid #fff; color: #fff; padding: 12px 5px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
-        .dale-fab { position: fixed; bottom: 20px; right: 20px; width: 85px; height: 85px; border-radius: 50%; background: var(--neon-pink); border: 4px solid #fff; color: #fff; font-family: 'Impact'; font-size: 1.3rem; box-shadow: 0 0 25px var(--neon-pink); z-index: 1000; }
         
+        .dale-fab { position: fixed; bottom: 20px; right: 20px; width: 85px; height: 85px; border-radius: 50%; background: var(--neon-pink); border: 4px solid #fff; color: #fff; font-family: 'Impact'; font-size: 1.3rem; box-shadow: 0 0 25px var(--neon-pink); z-index: 1000; }
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.5rem; font-family: 'Impact'; box-shadow: 5px 5px 0 var(--neon-pink); color: black; }
+        .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
     </style>
 </head>
 <body>
 
 <div id="overlay">
-    <h1 style="color:var(--neon-pink); font-size: 5rem; font-family: 'Impact'; margin:0;">DALE!</h1>
-    <p style="letter-spacing: 2px; font-family: sans-serif; font-weight: bold;">WHO ARE YOU?</p>
-    <div id="nameList">Loading roster...</div>
+    <h1 style="color:var(--neon-pink); font-size: 5rem;">DALE!</h1>
+    <div id="nameList">Loading...</div>
 </div>
 
 <div class="hero">
@@ -65,23 +63,31 @@
     <div class="card">
         <h3>📅 THE GAMEPLAN</h3>
         <div id="itinList"></div>
-
         <div class="form-box">
-            <div class="form-row">
-                <select id="inDay">
+            <div style="display:flex; gap:10px;">
+                <select id="inDay" style="flex:1;">
                     <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
                     <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
                 </select>
-                <input type="text" id="inTime" placeholder="3:00 PM" style="width: 40%;">
+                <input type="text" id="inTime" placeholder="3:00 PM" style="width:40%;">
             </div>
-            <input type="text" id="inAct" placeholder="What are we doing?">
+            <input type="text" id="inAct" placeholder="Activity...">
             <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
 
     <div class="card">
-        <h3 style="color:var(--sun-yellow); border-color: var(--sun-yellow);">🍹 GROUP VIBES</h3>
-        <div id="statusList" style="margin-bottom:15px; font-weight: bold; font-family: sans-serif;"></div>
+        <h3 style="color:var(--neon-pink); border-color:var(--neon-pink);">🎒 PRIVATE PACKING</h3>
+        <div id="packingList"></div>
+        <div class="form-box">
+            <input type="text" id="pIn" placeholder="Pack sunscreen..." style="border-color:var(--neon-pink)">
+            <button onclick="addPack()" class="full-btn" style="background:var(--neon-pink); color:white;">ADD ITEM</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="color:var(--sun-yellow); border-color:var(--sun-yellow);">🍹 GROUP VIBES</h3>
+        <div id="statusList" style="margin-bottom:15px; font-weight: bold;"></div>
         <div class="vibe-grid">
             <button class="vibe-btn" onclick="updateVibe('🍹 Drinkin')">🍹 Drinkin</button>
             <button class="vibe-btn" onclick="updateVibe('🌊 Beach')">🌊 Beach</button>
@@ -93,24 +99,19 @@
 <button class="dale-fab" id="musicBtn" onclick="toggleMusic()">DALE!</button>
 
 <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzga_ob72ZuQd1yOUcIJsZj47nI_iPPsqPdi02ZY6r8zD5HzkolvDWdxI6AliCqNYo/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznpy-T0pZV9m_Xaq8_uXN9qQie3-IUQJ3SV1ZtYcdO6sMaUXH40PqGygXKqbzuZ_9J/exec'; 
     let myName = localStorage.getItem('mx_name');
-    
-    // Updated to a high-energy Latin House / Brass track
     const audio = new Audio('https://cdn.pixabay.com/audio/2022/10/14/audio_9939f770f7.mp3'); 
     audio.loop = true;
 
     async function fetchData() {
         const res = await fetch(SCRIPT_URL + '?action=getData');
         const data = await res.json();
-        
         if (!myName) {
             document.getElementById('nameList').innerHTML = data.status.map(row => 
                 `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`).join('');
         } else { document.getElementById('overlay').style.display = 'none'; }
-        
         document.getElementById('statusList').innerHTML = data.status.map(row => `<div>${row[0]}: <span style="color:var(--ocean-blue)">${row[1] || 'Chillin'}</span></div>`).join('');
-        
         renderItinerary(data.itinerary);
     }
 
@@ -118,47 +119,50 @@
         const listDiv = document.getElementById('itinList');
         listDiv.innerHTML = '';
         const grouped = {};
-
         rows.forEach(r => {
-            const d = r[0];
-            if (!grouped[d]) grouped[d] = [];
-            grouped[d].push({ time: r[1], act: r[2] });
+            if(!grouped[r[0]]) grouped[r[0]] = [];
+            grouped[r[0]].push({ time: r[1], act: r[2] });
         });
-
-        const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        daysOrder.forEach(day => {
+        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
             if (grouped[day]) {
                 listDiv.innerHTML += `<div class="day-header">${day}</div>`;
                 grouped[day].forEach(item => {
-                    listDiv.innerHTML += `
-                    <div class="itin-row">
-                        <span class="itin-time">${item.time}</span>
-                        <span class="itin-act">${item.act}</span>
-                        <span class="del" onclick="deleteItin('${item.act.replace(/'/g, "\\'")}')">×</span>
-                    </div>`;
+                    listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span><span class="del" onclick="deleteItin('${item.act}')">×</span></div>`;
                 });
             }
         });
     }
 
     async function addItin() {
-        const payload = {
-            action: 'addItin',
-            day: document.getElementById('inDay').value,
-            time: document.getElementById('inTime').value,
-            activity: document.getElementById('inAct').value
-        };
-        if(!payload.activity) return;
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        document.getElementById('inTime').value = '';
-        document.getElementById('inAct').value = '';
+        const d = document.getElementById('inDay').value;
+        const t = document.getElementById('inTime').value;
+        const a = document.getElementById('inAct').value;
+        if(!a) return;
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', day: d, time: t, activity: a }) });
+        document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
         setTimeout(fetchData, 1200);
     }
 
     async function deleteItin(act) {
-        if(!confirm("Delete this activity?")) return;
+        if(!confirm("Delete?")) return;
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delItin', activity: act }) });
         setTimeout(fetchData, 1000);
+    }
+
+    // PACKING LOGIC
+    let pItems = JSON.parse(localStorage.getItem('mx_p')) || [];
+    function renderP() {
+        document.getElementById('packingList').innerHTML = pItems.map((it, i) => 
+            `<div class="pack-item"><span>${it}</span><span class="del" onclick="remP(${i})">×</span></div>`).join('');
+        localStorage.setItem('mx_p', JSON.stringify(pItems));
+    }
+    function addPack() { const i = document.getElementById('pIn'); if(i.value){pItems.push(i.value); i.value=''; renderP();}}
+    function remP(i) { pItems.splice(i,1); renderP(); }
+
+    function toggleMusic() { 
+        const btn = document.getElementById('musicBtn');
+        if(audio.paused) { audio.play(); btn.innerText = "STOP"; btn.style.background = "#58cc02"; }
+        else { audio.pause(); btn.innerText = "DALE!"; btn.style.background = "var(--neon-pink)"; }
     }
 
     async function updateVibe(vibe) {
@@ -168,26 +172,16 @@
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
     
-    function toggleMusic() { 
-        const btn = document.getElementById('musicBtn');
-        if(audio.paused) { 
-            audio.play().catch(e => console.log("User must interact first")); 
-            btn.innerText = "STOP"; btn.style.background = "#58cc02"; 
-        } else { 
-            audio.pause(); btn.innerText = "DALE!"; btn.style.background = "#ff007f"; 
-        }
-    }
-
-    const target = new Date("April 13, 2026 16:00:00 EST").getTime();
+    // Countdown
     setInterval(() => {
-        const diff = target - new Date().getTime();
+        const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
         document.getElementById('hours').innerText = Math.max(0, Math.floor((diff % 86400000) / 3600000)).toString().padStart(2, '0');
         document.getElementById('mins').innerText = Math.max(0, Math.floor((diff % 3600000) / 60000)).toString().padStart(2, '0');
         document.getElementById('secs').innerText = Math.max(0, Math.floor((diff % 60000) / 1000)).toString().padStart(2, '0');
     }, 1000);
 
-    fetchData();
+    renderP(); fetchData();
 </script>
 </body>
 </html>
