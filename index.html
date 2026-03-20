@@ -12,7 +12,7 @@
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
         .unit span { display: block; font-size: 2.5rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
-        .weather-box { margin: 10px auto; max-width: 300px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); overflow: hidden; }
+        .weather-box { margin: 10px auto; max-width: 320px; min-height: 150px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); }
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
@@ -47,7 +47,7 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     <div class="weather-box">
-        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us" data-days="3">CANCUN WEATHER</a>
+        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/?unit=us" data-label_1="CANCUN" data-label_2="WEATHER" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" >WEATHER</a>
     </div>
 </div>
 
@@ -94,22 +94,20 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMOXrS-s6pIBlrHnaZxPSoojFoQMU-Z2rK-GrKLb41WqZk52xU1Yfm-ZdWKgzQXbdR/exec'; 
     let myName = localStorage.getItem('mx_name');
     
-    // NEW AUDIO LINK - DALE VIBES
-    const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3'); 
+    // Using a different audio source to ensure no dead links
+    const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'); 
     audio.loop = true;
 
     function toggleMusic() { 
         const btn = document.getElementById('musicBtn');
         if (audio.paused) { 
+            // The "Force Play" logic
             audio.play().then(() => {
                 btn.innerText = "STOP"; 
                 btn.style.background = "#58cc02"; 
             }).catch(e => {
-                // If browser blocks, it tries again
-                audio.muted = true;
-                audio.play();
-                audio.muted = false;
-                btn.innerText = "STOP";
+                // If blocked, wait for user to touch again
+                btn.innerText = "TAP AGAIN";
             });
         } else { 
             audio.pause(); 
@@ -186,6 +184,7 @@
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
     
+    // Corrected Weather Script Loader
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 
     setInterval(() => {
