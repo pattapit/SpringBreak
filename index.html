@@ -47,7 +47,7 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     <div class="weather-box">
-        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
+        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us" data-days="3">CANCUN WEATHER</a>
     </div>
 </div>
 
@@ -94,7 +94,8 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMOXrS-s6pIBlrHnaZxPSoojFoQMU-Z2rK-GrKLb41WqZk52xU1Yfm-ZdWKgzQXbdR/exec'; 
     let myName = localStorage.getItem('mx_name');
     
-    const audio = new Audio('https://cdn.pixabay.com/audio/2022/10/14/audio_9939f770f7.mp3'); 
+    // NEW AUDIO LINK - DALE VIBES
+    const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3'); 
     audio.loop = true;
 
     function toggleMusic() { 
@@ -104,7 +105,11 @@
                 btn.innerText = "STOP"; 
                 btn.style.background = "#58cc02"; 
             }).catch(e => {
-                btn.innerText = "TAP FIRST";
+                // If browser blocks, it tries again
+                audio.muted = true;
+                audio.play();
+                audio.muted = false;
+                btn.innerText = "STOP";
             });
         } else { 
             audio.pause(); 
