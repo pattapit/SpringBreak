@@ -20,9 +20,22 @@
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .itin-time { color: var(--ocean-blue); font-weight: 900; width: 95px; font-size: 0.9rem; flex-shrink: 0; }
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; }
+        .vibe-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--glass); }
+        .vibe-status { color: var(--sun-yellow); font-weight: bold; }
+        .form-box { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; }
+        .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; }
+        .dale-fab { position: fixed; bottom: 20px; right: 20px; width: 85px; height: 85px; border-radius: 50%; background: var(--neon-pink); border: 4px solid #fff; color: #fff; font-family: 'Impact'; font-size: 1.3rem; box-shadow: 0 0 25px var(--neon-pink); z-index: 1000; display: flex; align-items: center; justify-content: center; text-align: center; }
+        #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
     </style>
 </head>
 <body>
+
+<div id="overlay">
+    <h1 style="color:var(--neon-pink); font-size: 4rem;">DALE!</h1>
+    <div id="nameList">Loading Crew...</div>
+</div>
 
 <div class="hero">
     <div class="main-head">MEXICO<br>2026</div>
@@ -39,13 +52,53 @@
 
 <div class="container">
     <div class="card">
-        <h3>📅 THE GAMEPLAN</h3>
-        <div id="itinList">Loading Mexico Plans...</div>
+        <h3>😎 Crew Vibe Check</h3>
+        <div id="vibeList"></div>
+        <div class="form-box">
+            <input type="text" id="vibeInput" placeholder="What's your current vibe?">
+            <button onclick="updateVibe()" class="full-btn">UPDATE VIBE</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📅 The Gameplan</h3>
+        <div id="itinList"></div>
+        <div class="form-box">
+            <select id="inDay">
+                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+            </select>
+            <input type="text" id="inTime" placeholder="3:00 PM">
+            <input type="text" id="inAct" placeholder="What are we doing?">
+            <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>🎒 Packing Essentials</h3>
+        <ul id="packingList" style="list-style: none; padding: 0;">
+            <li>✅ Passport & FMM Form</li>
+            <li>✅ Reef-Safe Sunscreen</li>
+            <li>✅ Pesos / Cash</li>
+            <li>✅ Insulated Water Bottle</li>
+        </ul>
     </div>
 </div>
 
+<button class="dale-fab" id="musicBtn" onclick="toggleMusic()">DALE!</button>
+
 <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ8WZUAm0GQJF9Rq7mvjTK1KvTk7VMcqvJp7aEXDv_M3ikl_lj7QdfeFvASS45MaYC/exec'; 
+    let myName = localStorage.getItem('mx_name');
+    const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3'); 
+    audio.loop = true;
+
+    function toggleMusic() { 
+        const btn = document.getElementById('musicBtn');
+        if (audio.paused) { 
+            audio.play().then(() => { btn.innerText = "STOP"; btn.style.background = "#58cc02"; }).catch(e => console.log(e));
+        } else { audio.pause(); btn.innerText = "DALE!"; btn.style.background = "var(--neon-pink)"; }
+    }
 
     function formatTime(t) {
         if (!t || typeof t !== 'string') return t;
@@ -62,47 +115,64 @@
 
     async function fetchData() {
         try {
-            // Added ?app=sb to ensure we get Spring Break data
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
+            
+            if (myName) {
+                document.getElementById('overlay').style.display = 'none';
+            } else {
+                document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => 
+                    `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`
+                ).join('');
+            }
+
+            // Vibe Render
+            document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
+                `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
+            ).join('');
+
+            // Itinerary Render
             const rows = data.itinerary;
             const listDiv = document.getElementById('itinList');
             listDiv.innerHTML = '';
             const grouped = {};
-
-            // Rows[i][0]=Day, Rows[i][1]=Time, Rows[i][2]=Activity
             for (let i = 1; i < rows.length; i++) {
-                const day = rows[i][0];
-                const time = formatTime(rows[i][1]);
-                const activity = rows[i][2];
-                if (!activity) continue;
+                const [day, time, act] = rows[i];
+                if (!act) continue;
                 if (!grouped[day]) grouped[day] = [];
-                grouped[day].push({ time, activity });
+                grouped[day].push({ time: formatTime(time), act });
             }
-
-            const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-            daysOrder.forEach(day => {
+            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
                 if (grouped[day]) {
                     listDiv.innerHTML += `<div class="day-header">${day}</div>`;
                     grouped[day].forEach(item => {
-                        listDiv.innerHTML += `
-                        <div class="itin-row">
-                            <span class="itin-time">${item.time || '--'}</span>
-                            <span class="itin-act">${item.activity}</span>
-                        </div>`;
+                        listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span></div>`;
                     });
                 }
             });
-        } catch(e) { 
-            console.error(e);
-            document.getElementById('itinList').innerText = "Sync Error. Check Web App permissions.";
-        }
+        } catch(e) { console.error(e); }
     }
 
-    // Weather Widget Loader
+    async function updateVibe() {
+        const v = document.getElementById('vibeInput').value;
+        if (!v || !myName) return;
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ isSB: true, name: myName, vibe: v }) });
+        document.getElementById('vibeInput').value = '';
+        setTimeout(fetchData, 1000);
+    }
+
+    async function addItin() {
+        const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value;
+        if (!a) return;
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', isSB: true, day: d, time: t, activity: a }) });
+        document.getElementById('inAct').value = '';
+        setTimeout(fetchData, 1000);
+    }
+
+    function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
+
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 
-    // Countdown Logic
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
