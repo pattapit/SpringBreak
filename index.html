@@ -5,41 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mexico 2026 | DALE!</title>
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff007f">
     <style>
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
         body { margin: 0; font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: white; min-height: 100vh; padding-bottom: 80px; }
         .container { padding: 20px; }
-        .header { text-align: center; padding: 20px 0; font-weight: 900; font-size: 1.8rem; color: var(--sun-yellow); text-shadow: 2px 2px var(--neon-pink); }
+        .header { text-align: center; padding: 20px 0; font-weight: 900; font-size: 1.8rem; color: var(--sun-yellow); text-shadow: 2px 2px var(--neon-pink); letter-spacing: 2px; }
         
         #countdown { display: flex; justify-content: space-around; background: var(--glass); padding: 15px; border-radius: 15px; border: 1px solid var(--neon-pink); margin-bottom: 20px; backdrop-filter: blur(5px); }
         .unit span { display: block; font-size: 1.5rem; font-weight: bold; color: var(--ocean-blue); }
         .unit { font-size: 0.6rem; text-transform: uppercase; text-align: center;}
 
         .card { background: var(--glass); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        h3 { margin: 0 0 10px 0; font-size: 1rem; color: var(--sun-yellow); }
+        h3 { margin: 0 0 10px 0; font-size: 1rem; color: var(--sun-yellow); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Vibe Selector */
-        .vibe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-        .vibe-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--ocean-blue); color: white; padding: 8px; border-radius: 8px; font-size: 0.7rem; }
+        .vibe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
+        .vibe-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--ocean-blue); color: white; padding: 10px 5px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; }
 
-        /* Packing List */
-        .pack-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .del { color: var(--neon-pink); font-weight: bold; cursor: pointer; padding: 5px; }
-        input { background: rgba(0,0,0,0.3); border: 1px solid var(--ocean-blue); color: white; padding: 10px; border-radius: 8px; width: 60%; }
+        .pack-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .del { color: var(--neon-pink); font-weight: bold; cursor: pointer; padding: 5px 10px; font-size: 1.2rem; }
+        input { background: rgba(0,0,0,0.3); border: 1px solid var(--ocean-blue); color: white; padding: 12px; border-radius: 8px; width: 60%; font-size: 1rem; }
         
-        /* Duo Flashcards */
-        .duo-card { text-align: center; background: rgba(88, 204, 2, 0.1); border: 2px solid #58cc02; padding: 15px; border-radius: 15px; }
+        .duo-card { text-align: center; background: rgba(88, 204, 2, 0.1); border: 2px solid #58cc02; padding: 20px; border-radius: 15px; cursor: pointer; }
 
-        .dale-fab { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background: var(--neon-pink); border: none; color: white; font-weight: 900; box-shadow: 0 0 15px var(--neon-pink); z-index: 1000; }
+        .dale-fab { position: fixed; bottom: 20px; right: 20px; width: 65px; height: 65px; border-radius: 50%; background: var(--neon-pink); border: none; color: white; font-weight: 900; box-shadow: 0 0 20px var(--neon-pink); z-index: 1000; font-size: 0.9rem; }
         
-        /* Initial Identity Overlay */
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0c29; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0c29; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .name-btn { display: block; margin: 10px; padding: 15px; width: 220px; background: var(--ocean-blue); border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
 <div id="overlay">
-    <h2>Who are you?</h2>
+    <h1 style="color:var(--sun-yellow)">BIENVENIDOS</h1>
+    <p>Pick your name to enter:</p>
     <div id="nameList">Loading roster...</div>
 </div>
 
@@ -55,11 +54,11 @@
 
     <div class="card">
         <h3>🍹 Group Vibes</h3>
-        <div id="statusList" style="font-size: 0.8rem;"></div>
+        <div id="statusList" style="font-size: 0.9rem; line-height: 1.6;"></div>
         <div class="vibe-grid">
             <button class="vibe-btn" onclick="updateVibe('🍹 Drinkin')">🍹 Drinkin</button>
             <button class="vibe-btn" onclick="updateVibe('😴 Napping')">😴 Napping</button>
-            <button class="vibe-btn" onclick="updateVibe('🌊 Pool/Beach')">🌊 Beach</button>
+            <button class="vibe-btn" onclick="updateVibe('🌊 Beach')">🌊 Beach</button>
             <button class="vibe-btn" onclick="updateVibe('🌮 Eating')">🌮 Eating</button>
             <button class="vibe-btn" onclick="updateVibe('💃 Dale!')">💃 Dale!</button>
             <button class="vibe-btn" onclick="updateVibe('✈️ Traveling')">✈️ Traveling</button>
@@ -67,55 +66,58 @@
     </div>
 
     <div class="card">
-        <h3>📅 The One Plan</h3>
-        <div id="itinList" style="font-size: 0.9rem;"></div>
+        <h3>📅 Daily Highlight</h3>
+        <div id="itinList" style="font-size: 0.9rem; line-height: 1.4;"></div>
     </div>
 
     <div class="card">
-        <h3>🎒 Private Packing List</h3>
+        <h3 style="color: var(--ocean-blue);">🎒 My Private List</h3>
         <div id="packingList"></div>
-        <div style="margin-top:10px;">
+        <div style="margin-top:15px; display:flex; gap:10px;">
             <input type="text" id="pIn" placeholder="Add gear...">
-            <button onclick="addItem()" style="background:var(--ocean-blue); border:none; padding:10px; border-radius:8px; font-weight:bold;">ADD</button>
+            <button onclick="addItem()" style="background:var(--ocean-blue); border:none; padding:12px; border-radius:8px; font-weight:bold; flex-grow:1;">ADD</button>
         </div>
+        <button onclick="clearAll()" style="background:none; border:none; color:gray; font-size:0.7rem; margin-top:15px; width:100%; text-align:center;">Reset My List</button>
     </div>
 
     <div class="card duo-card" onclick="nextPhrase()">
-        <small>SPANISH SESH 🦉</small>
-        <h2 id="pEng">Ready for a round?</h2>
-        <h2 id="pEsp" style="color: #58cc02; display:none;">¿Listo para una ronda?</h2>
+        <small style="color:#58cc02; font-weight:bold; letter-spacing:1px;">LEARN THE LINGO 🦉</small>
+        <h2 id="pEng" style="margin:10px 0;">Ready for a round?</h2>
+        <h2 id="pEsp" style="color: #58cc02; display:none; margin:10px 0;">¿Listo para una ronda?</h2>
+        <p style="font-size:0.7rem; color:gray; margin:0;">(Tap to flip / next)</p>
     </div>
 </div>
 
 <button class="dale-fab" onclick="toggleMusic()">DALE!</button>
 
 <script>
-    const SCRIPT_URL = 'PASTE_YOUR_URL_HERE'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwNEVF8mqq96MGhHqerjnY0Ho2ouKjc6Wp3etKuEAF0C0j6oDtbON42mpWkhwVRAnNf/exec'; 
     let myName = localStorage.getItem('mx_name');
 
-    // 1. IDENTITY & DATA FETCHING
     async function fetchData() {
-        const res = await fetch(SCRIPT_URL + '?action=getData');
-        const data = await res.json();
-        
-        // Populate Initial Name Selection
-        if (!myName) {
-            document.getElementById('nameList').innerHTML = data.status.map(row => 
-                `<button onclick="setName('${row[0]}')" style="display:block; margin:10px; padding:10px; width:200px;">${row[0]}</button>`
+        try {
+            const res = await fetch(SCRIPT_URL + '?action=getData');
+            const data = await res.json();
+            
+            if (!myName) {
+                document.getElementById('nameList').innerHTML = data.status.map(row => 
+                    `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`
+                ).join('');
+            } else {
+                document.getElementById('overlay').style.display = 'none';
+            }
+
+            document.getElementById('statusList').innerHTML = data.status.map(row => 
+                `<div style="margin-bottom:5px;"><b>${row[0]}:</b> ${row[1] || 'Chillin...'}</div>`
             ).join('');
-        } else {
-            document.getElementById('overlay').style.display = 'none';
-        }
 
-        // Render Statuses
-        document.getElementById('statusList').innerHTML = data.status.map(row => 
-            `<div><b>${row[0]}:</b> ${row[1] || 'Living life'}</div>`
-        ).join('');
-
-        // Render Itinerary
-        document.getElementById('itinList').innerHTML = data.itinerary.map(row => 
-            `<div style="margin-bottom:8px;"><b>${row[0]}:</b> ${row[1]}</div>`
-        ).join('');
+            document.getElementById('itinList').innerHTML = data.itinerary.map(row => 
+                `<div style="margin-bottom:10px; border-left: 3px solid var(--sun-yellow); padding-left:10px;">
+                    <div style="font-weight:bold; color:var(--sun-yellow);">${row[0]}</div>
+                    <div>${row[1]}</div>
+                </div>`
+            ).join('');
+        } catch(e) { console.log("Fetch error", e); }
     }
 
     function setName(name) {
@@ -126,25 +128,27 @@
     }
 
     async function updateVibe(vibe) {
+        // Optimistic UI update
+        const statusDiv = document.getElementById('statusList');
+        statusDiv.innerHTML += `<div style="color:var(--ocean-blue)">Updating your vibe...</div>`;
+        
         await fetch(SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
             body: JSON.stringify({ name: myName, vibe: vibe })
         });
-        setTimeout(fetchData, 1000);
+        setTimeout(fetchData, 1500);
     }
 
-    // 2. COUNTDOWN
     const target = new Date("April 13, 2026 16:00:00 EST").getTime();
     setInterval(() => {
         const diff = target - new Date().getTime();
-        document.getElementById('days').innerText = Math.floor(diff / 86400000);
-        document.getElementById('hours').innerText = Math.floor((diff % 86400000) / 3600000);
-        document.getElementById('mins').innerText = Math.floor((diff % 3600000) / 60000);
-        document.getElementById('secs').innerText = Math.floor((diff % 60000) / 1000);
+        document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000));
+        document.getElementById('hours').innerText = Math.max(0, Math.floor((diff % 86400000) / 3600000));
+        document.getElementById('mins').innerText = Math.max(0, Math.floor((diff % 3600000) / 60000));
+        document.getElementById('secs').innerText = Math.max(0, Math.floor((diff % 60000) / 1000));
     }, 1000);
 
-    // 3. PACKING
     let pItems = JSON.parse(localStorage.getItem('mx_p')) || [];
     function renderP() {
         document.getElementById('packingList').innerHTML = pItems.map((it, i) => 
@@ -153,20 +157,34 @@
     }
     function addItem() { const i = document.getElementById('pIn'); if(i.value){pItems.push(i.value); i.value=''; renderP();}}
     function remP(i) { pItems.splice(i,1); renderP(); }
+    function clearAll() { if(confirm("Clear your list?")) { pItems = []; renderP(); } }
     renderP();
 
-    // 4. DUO
-    const phrases = [{e:"Another round!", s:"¡Otra ronda!"}, {e:"Where is the bathroom?", s:"¿Dónde está el baño?"}, {e:"The check, please.", s:"La cuenta, por favor."}];
+    const phrases = [
+        {e:"Another round!", s:"¡Otra ronda!"}, 
+        {e:"Where is the bathroom?", s:"¿Dónde está el baño?"}, 
+        {e:"The check, please.", s:"La cuenta, por favor."},
+        {e:"Where is the party?", s:"¿Dónde está la fiesta?"},
+        {e:"I am drunk.", s:"Estoy borracho."}
+    ];
     let pIdx = 0;
     function nextPhrase() {
         const s = document.getElementById('pEsp');
         if(s.style.display === 'none') { s.style.display = 'block'; }
-        else { pIdx = (pIdx+1)%phrases.length; document.getElementById('pEng').innerText = phrases[pIdx].e; s.innerText = phrases[pIdx].s; s.style.display = 'none'; }
+        else { 
+            pIdx = (pIdx+1)%phrases.length; 
+            document.getElementById('pEng').innerText = phrases[pIdx].e; 
+            s.innerText = phrases[pIdx].s; 
+            s.style.display = 'none'; 
+        }
     }
 
-    // 5. MUSIC
-    const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); 
-    function toggleMusic() { audio.paused ? audio.play() : audio.pause(); }
+    const audio = new Audio('https://cdn.pixabay.com/audio/2022/05/23/audio_104a377033.mp3'); 
+    audio.loop = true;
+    function toggleMusic() { 
+        if(audio.paused) { audio.play(); document.querySelector('.dale-fab').innerText = "STOP"; }
+        else { audio.pause(); document.querySelector('.dale-fab').innerText = "DALE!"; }
+    }
 
     fetchData();
 </script>
