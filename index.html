@@ -6,37 +6,26 @@
     <title>MEXICO 2026 | DALE!</title>
     <style>
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
-        body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 120px; }
-        
-        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.5), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 70px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
-        .main-head { font-size: 5.5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 25px; text-transform: uppercase; }
-        
-        #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; }
-        .unit span { display: block; font-size: 3rem; color: var(--sun-yellow); text-shadow: 2px 2px black; }
-        .unit { font-size: 0.75rem; font-weight: bold; }
-
-        .container { padding: 15px; font-family: sans-serif; text-align: left; }
+        body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 120px; overflow-x: hidden; }
+        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 60px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
+        .main-head { font-size: 5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
+        #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
+        .unit span { display: block; font-size: 2.5rem; color: var(--sun-yellow); }
+        .unit { font-size: 0.7rem; font-weight: bold; }
+        .weather-box { margin: 10px auto; max-width: 300px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); }
+        .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
-        h3 { margin: 0 0 15px 0; color: var(--ocean-blue); letter-spacing: 2px; font-size: 1.2rem; border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
-
-        /* ITINERARY STYLES */
+        h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
         .day-header { color: var(--neon-pink); font-size: 2rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; }
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .itin-time { color: var(--ocean-blue); font-weight: 900; width: 85px; font-size: 1rem; flex-shrink: 0; }
+        .itin-time { color: var(--ocean-blue); font-weight: 900; width: 85px; font-size: 1rem; }
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; }
-        
-        /* PACKING LIST STYLES */
-        .pack-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
-
-        /* FORM STYLES */
         .form-box { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
         input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; font-size: 1rem; }
-        .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; color: #000; cursor: pointer; }
-
+        .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; }
         .del { color: var(--neon-pink); font-size: 1.8rem; cursor: pointer; padding-left: 10px; }
         .vibe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
         .vibe-btn { background: rgba(255,255,255,0.1); border: 1px solid #fff; color: #fff; padding: 12px 5px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
-        
         .dale-fab { position: fixed; bottom: 20px; right: 20px; width: 85px; height: 85px; border-radius: 50%; background: var(--neon-pink); border: 4px solid #fff; color: #fff; font-family: 'Impact'; font-size: 1.3rem; box-shadow: 0 0 25px var(--neon-pink); z-index: 1000; }
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
@@ -46,7 +35,7 @@
 
 <div id="overlay">
     <h1 style="color:var(--neon-pink); font-size: 5rem;">DALE!</h1>
-    <div id="nameList">Loading...</div>
+    <div id="nameList">Loading roster...</div>
 </div>
 
 <div class="hero">
@@ -56,6 +45,9 @@
         <div class="unit"><span id="hours">00</span>HRS</div>
         <div class="unit"><span id="mins">00</span>MIN</div>
         <div class="unit"><span id="secs">00</span>SEC</div>
+    </div>
+    <div class="weather-box">
+        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" >CANCUN WEATHER</a>
     </div>
 </div>
 
@@ -77,17 +69,17 @@
     </div>
 
     <div class="card">
-        <h3 style="color:var(--neon-pink); border-color:var(--neon-pink);">🎒 PRIVATE PACKING</h3>
+        <h3 style="color:var(--neon-pink); border-color:var(--neon-pink);">🎒 PACKING LIST</h3>
         <div id="packingList"></div>
         <div class="form-box">
-            <input type="text" id="pIn" placeholder="Pack sunscreen..." style="border-color:var(--neon-pink)">
-            <button onclick="addPack()" class="full-btn" style="background:var(--neon-pink); color:white;">ADD ITEM</button>
+            <input type="text" id="pIn" placeholder="Add item..." style="border-color:var(--neon-pink)">
+            <button onclick="addPack()" class="full-btn" style="background:var(--neon-pink); color:white;">ADD</button>
         </div>
     </div>
 
     <div class="card">
-        <h3 style="color:var(--sun-yellow); border-color:var(--sun-yellow);">🍹 GROUP VIBES</h3>
-        <div id="statusList" style="margin-bottom:15px; font-weight: bold;"></div>
+        <h3 style="color:var(--sun-yellow); border-color:var(--sun-yellow);">🍹 VIBES</h3>
+        <div id="statusList"></div>
         <div class="vibe-grid">
             <button class="vibe-btn" onclick="updateVibe('🍹 Drinkin')">🍹 Drinkin</button>
             <button class="vibe-btn" onclick="updateVibe('🌊 Beach')">🌊 Beach</button>
@@ -101,17 +93,20 @@
 <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznpy-T0pZV9m_Xaq8_uXN9qQie3-IUQJ3SV1ZtYcdO6sMaUXH40PqGygXKqbzuZ_9J/exec'; 
     let myName = localStorage.getItem('mx_name');
-    const audio = new Audio('https://cdn.pixabay.com/audio/2022/10/14/audio_9939f770f7.mp3'); 
+    
+    // Music setup
+    let audio = new Audio('https://cdn.pixabay.com/audio/2022/10/14/audio_9939f770f7.mp3'); 
     audio.loop = true;
 
     async function fetchData() {
-        const res = await fetch(SCRIPT_URL + '?action=getData');
+        // Force refresh by adding a timestamp to the URL to bypass cache
+        const res = await fetch(SCRIPT_URL + '?action=getData&ts=' + Date.now());
         const data = await res.json();
         if (!myName) {
             document.getElementById('nameList').innerHTML = data.status.map(row => 
                 `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`).join('');
         } else { document.getElementById('overlay').style.display = 'none'; }
-        document.getElementById('statusList').innerHTML = data.status.map(row => `<div>${row[0]}: <span style="color:var(--ocean-blue)">${row[1] || 'Chillin'}</span></div>`).join('');
+        document.getElementById('statusList').innerHTML = data.status.map(row => `<div>${row[0]}: ${row[1] || 'Chillin'}</div>`).join('');
         renderItinerary(data.itinerary);
     }
 
@@ -134,13 +129,11 @@
     }
 
     async function addItin() {
-        const d = document.getElementById('inDay').value;
-        const t = document.getElementById('inTime').value;
-        const a = document.getElementById('inAct').value;
+        const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value;
         if(!a) return;
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', day: d, time: t, activity: a }) });
         document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
-        setTimeout(fetchData, 1200);
+        setTimeout(fetchData, 1500);
     }
 
     async function deleteItin(act) {
@@ -149,21 +142,26 @@
         setTimeout(fetchData, 1000);
     }
 
-    // PACKING LOGIC
+    function toggleMusic() { 
+        const btn = document.getElementById('musicBtn');
+        if(audio.paused) { 
+            audio.play(); btn.innerText = "STOP"; btn.style.background = "#58cc02"; 
+        } else { 
+            audio.pause(); btn.innerText = "DALE!"; btn.style.background = "var(--neon-pink)"; 
+        }
+    }
+
+    // Weather widget loader
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+
+    // Packing logic
     let pItems = JSON.parse(localStorage.getItem('mx_p')) || [];
     function renderP() {
-        document.getElementById('packingList').innerHTML = pItems.map((it, i) => 
-            `<div class="pack-item"><span>${it}</span><span class="del" onclick="remP(${i})">×</span></div>`).join('');
+        document.getElementById('packingList').innerHTML = pItems.map((it, i) => `<div class="pack-item"><span>${it}</span><span class="del" onclick="remP(${i})">×</span></div>`).join('');
         localStorage.setItem('mx_p', JSON.stringify(pItems));
     }
     function addPack() { const i = document.getElementById('pIn'); if(i.value){pItems.push(i.value); i.value=''; renderP();}}
     function remP(i) { pItems.splice(i,1); renderP(); }
-
-    function toggleMusic() { 
-        const btn = document.getElementById('musicBtn');
-        if(audio.paused) { audio.play(); btn.innerText = "STOP"; btn.style.background = "#58cc02"; }
-        else { audio.pause(); btn.innerText = "DALE!"; btn.style.background = "var(--neon-pink)"; }
-    }
 
     async function updateVibe(vibe) {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name: myName, vibe: vibe }) });
@@ -172,7 +170,6 @@
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
     
-    // Countdown
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
