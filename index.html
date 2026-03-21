@@ -12,9 +12,9 @@
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
         .unit span { display: block; font-size: 2.5rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
-        .weather-box { margin: 10px auto; max-width: 320px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); min-height: 140px; }
+        .weather-box { margin: 10px auto; max-width: 320px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); min-height: 150px; overflow: hidden; }
         .container { padding: 15px; font-family: sans-serif; }
-        .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
+        .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); position: relative; }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
         .day-header { color: var(--neon-pink); font-size: 2rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; font-family: 'Impact'; }
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -28,10 +28,11 @@
         #esText { font-size: 1.8rem; font-weight: bold; }
         #enText { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
         .form-box { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; }
+        input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; font-size: 1rem; }
         .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; }
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
+        .dale-btn { position: absolute; bottom: 10px; right: 10px; background: #ff007f; color: white; border: none; border-radius: 50%; width: 60px; height: 60px; font-family: 'Impact'; font-size: 0.8rem; cursor: pointer; box-shadow: 0 0 15px #ff007f; }
     </style>
 </head>
 <body>
@@ -50,7 +51,7 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     <div class="weather-box">
-        <a class="weatherwidget-io" href="https://forecast7.com/us/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-mode="Current" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
+        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-mode="Current" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
     </div>
 </div>
 
@@ -67,13 +68,14 @@
     </div>
 
     <div class="card">
-        <h3>🎒 PACKING LIST</h3>
+        <h3>🎒 PACKING ESSENTIALS</h3>
         <div id="packList"></div>
         <div class="form-box">
             <input type="text" id="packInput" placeholder="Add item...">
             <button onclick="addPackItem()" class="full-btn">ADD ITEM</button>
-            <button onclick="clearPacking()" style="background:none; border:none; color:var(--neon-pink); cursor:pointer; margin-top:5px;">Clear All</button>
+            <button onclick="clearPacking()" style="background:none; border:none; color:var(--neon-pink); cursor:pointer; margin-top:5px;">Clear List</button>
         </div>
+        <button class="dale-btn" onclick="alert('DALE!')">DALE!</button>
     </div>
 
     <div class="card">
@@ -98,7 +100,12 @@
 <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5tNwFc5x5LH7v4zjX1Ml_LYVQ2Nn-u-bLKm-veAC24T2BBThkv_TIU3rcMhRCeA93/exec'; 
     let myName = localStorage.getItem('mx_name');
-    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [{txt: "Passport & FMM", done: false}, {txt: "Sunscreen", done: false}];
+    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [
+        {txt: "Passport & FMM Form", done: true},
+        {txt: "Reef-Safe Sunscreen", done: true},
+        {txt: "Pesos / Cash", done: true},
+        {txt: "Insulated Water Bottle", done: true}
+    ];
 
     const phrases = [
         {es: "¿Dónde está el baño?", en: "Where is the bathroom?"},
@@ -107,10 +114,7 @@
         {es: "¿Cuánto cuesta?", en: "How much does it cost?"},
         {es: "¡Salud!", en: "Cheers!"},
         {es: "Sin picante", en: "Not spicy"},
-        {es: "Está delicioso", en: "It's delicious"},
-        {es: "Vámonos", en: "Let's go"},
-        {es: "De nada", en: "You're welcome"},
-        {es: "Disculpe", en: "Excuse me / Sorry"}
+        {es: "Está delicioso", en: "It's delicious"}
     ];
 
     function flipCard() {
@@ -183,6 +187,7 @@
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
