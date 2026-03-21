@@ -32,7 +32,6 @@
         .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; }
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
-        .dale-btn { position: absolute; bottom: 10px; right: 10px; background: #ff007f; color: white; border: none; border-radius: 50%; width: 60px; height: 60px; font-family: 'Impact'; font-size: 0.8rem; cursor: pointer; box-shadow: 0 0 15px #ff007f; }
     </style>
 </head>
 <body>
@@ -51,7 +50,7 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     <div class="weather-box">
-        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-mode="Current" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
+        <a class="weatherwidget-io" href="https://forecast7.com/us/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-mode="Current" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
     </div>
 </div>
 
@@ -68,14 +67,13 @@
     </div>
 
     <div class="card">
-        <h3>🎒 PACKING ESSENTIALS</h3>
+        <h3>🎒 PACKING LIST</h3>
         <div id="packList"></div>
         <div class="form-box">
             <input type="text" id="packInput" placeholder="Add item...">
             <button onclick="addPackItem()" class="full-btn">ADD ITEM</button>
             <button onclick="clearPacking()" style="background:none; border:none; color:var(--neon-pink); cursor:pointer; margin-top:5px;">Clear List</button>
         </div>
-        <button class="dale-btn" onclick="alert('DALE!')">DALE!</button>
     </div>
 
     <div class="card">
@@ -100,12 +98,7 @@
 <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5tNwFc5x5LH7v4zjX1Ml_LYVQ2Nn-u-bLKm-veAC24T2BBThkv_TIU3rcMhRCeA93/exec'; 
     let myName = localStorage.getItem('mx_name');
-    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [
-        {txt: "Passport & FMM Form", done: true},
-        {txt: "Reef-Safe Sunscreen", done: true},
-        {txt: "Pesos / Cash", done: true},
-        {txt: "Insulated Water Bottle", done: true}
-    ];
+    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [{txt: "Passport & FMM Form", done: false}, {txt: "Sunscreen", done: false}];
 
     const phrases = [
         {es: "¿Dónde está el baño?", en: "Where is the bathroom?"},
@@ -187,7 +180,6 @@
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
