@@ -50,7 +50,7 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     <div class="weather-box">
-        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-mode="Current" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
+        <a class="weatherwidget-io" href="https://forecast7.com/us/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-mode="Current" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
     </div>
 </div>
 
@@ -59,10 +59,7 @@
         <h3>📅 THE GAMEPLAN</h3>
         <div id="itinList"></div>
         <div class="form-box">
-            <select id="inDay">
-                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-                <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-            </select>
+            <select id="inDay"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
             <input type="text" id="inTime" placeholder="e.g. 3:00 PM">
             <input type="text" id="inAct" placeholder="What are we doing?">
             <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
@@ -101,10 +98,7 @@
 <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5tNwFc5x5LH7v4zjX1Ml_LYVQ2Nn-u-bLKm-veAC24T2BBThkv_TIU3rcMhRCeA93/exec'; 
     let myName = localStorage.getItem('mx_name');
-    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [
-        {txt: "Passport & FMM", done: false},
-        {txt: "Sunscreen", done: false}
-    ];
+    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [{txt: "Passport & FMM", done: false}, {txt: "Sunscreen", done: false}];
 
     const phrases = [
         {es: "¿Dónde está el baño?", en: "Where is the bathroom?"},
@@ -113,7 +107,10 @@
         {es: "¿Cuánto cuesta?", en: "How much does it cost?"},
         {es: "¡Salud!", en: "Cheers!"},
         {es: "Sin picante", en: "Not spicy"},
-        {es: "Está delicioso", en: "It's delicious"}
+        {es: "Está delicioso", en: "It's delicious"},
+        {es: "Vámonos", en: "Let's go"},
+        {es: "De nada", en: "You're welcome"},
+        {es: "Disculpe", en: "Excuse me / Sorry"}
     ];
 
     function flipCard() {
@@ -132,18 +129,10 @@
         try {
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
-            
-            if (myName) {
-                document.getElementById('overlay').style.display = 'none';
-            } else {
-                document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => 
-                    `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`
-                ).join('');
-            }
+            if (myName) { document.getElementById('overlay').style.display = 'none'; }
+            else { document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`).join(''); }
 
-            document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
-                `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
-            ).join('');
+            document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`).join('');
 
             const rows = data.itinerary;
             const listDiv = document.getElementById('itinList');
@@ -158,9 +147,7 @@
             ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
                 if (grouped[day]) {
                     listDiv.innerHTML += `<div class="day-header">${day}</div>`;
-                    grouped[day].forEach(item => {
-                        listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span></div>`;
-                    });
+                    grouped[day].forEach(item => { listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span></div>`; });
                 }
             });
             renderPacking();
@@ -180,35 +167,22 @@
         const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value;
         if (!a) return;
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', isSB: true, day: d, time: t, activity: a }) });
-        document.getElementById('inAct').value = '';
-        document.getElementById('inTime').value = '';
+        document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
         setTimeout(fetchData, 1000);
     }
 
     function renderPacking() {
         const list = document.getElementById('packList');
-        list.innerHTML = packingItems.map((item, i) => `
-            <div class="pack-item ${item.done ? 'done' : ''}">
-                <span onclick="togglePack(${i})">${item.done ? '✅' : '⬜'} ${item.txt}</span>
-                <button onclick="deletePack(${i})" style="background:none; border:none; color:red; font-size:1.2rem; cursor:pointer;">&times;</button>
-            </div>
-        `).join('');
+        list.innerHTML = packingItems.map((item, i) => `<div class="pack-item ${item.done ? 'done' : ''}"><span onclick="togglePack(${i})">${item.done ? '✅' : '⬜'} ${item.txt}</span><button onclick="deletePack(${i})" style="background:none; border:none; color:red; font-size:1.2rem; cursor:pointer;">&times;</button></div>`).join('');
         localStorage.setItem('mx_packing', JSON.stringify(packingItems));
     }
-    function addPackItem() {
-        const input = document.getElementById('packInput');
-        if(!input.value) return;
-        packingItems.push({txt: input.value, done: false});
-        input.value = '';
-        renderPacking();
-    }
+    function addPackItem() { const input = document.getElementById('packInput'); if(!input.value) return; packingItems.push({txt: input.value, done: false}); input.value = ''; renderPacking(); }
     function togglePack(i) { packingItems[i].done = !packingItems[i].done; renderPacking(); }
     function deletePack(i) { packingItems.splice(i, 1); renderPacking(); }
     function clearPacking() { if(confirm("Clear list?")) { packingItems = []; renderPacking(); } }
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
@@ -216,7 +190,6 @@
         document.getElementById('mins').innerText = Math.max(0, Math.floor((diff % 3600000) / 60000)).toString().padStart(2, '0');
         document.getElementById('secs').innerText = Math.max(0, Math.floor((diff % 60000) / 1000)).toString().padStart(2, '0');
     }, 1000);
-
     fetchData();
 </script>
 </body>
