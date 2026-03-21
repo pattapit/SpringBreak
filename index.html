@@ -12,24 +12,18 @@
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
         .unit span { display: block; font-size: 2.5rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
-        .weather-box { margin: 10px auto; max-width: 320px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); min-height: 150px; overflow: hidden; }
+        .weather-box { margin: 10px auto; max-width: 320px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); min-height: 150px; }
         .container { padding: 15px; font-family: sans-serif; }
-        .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); position: relative; }
+        .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
         .day-header { color: var(--neon-pink); font-size: 2rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; font-family: 'Impact'; }
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .itin-time { color: var(--ocean-blue); font-weight: 900; width: 95px; font-size: 0.9rem; flex-shrink: 0; }
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; }
-        .pack-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .pack-item.done span { text-decoration: line-through; opacity: 0.5; }
-        .vibe-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--glass); }
-        .vibe-status { color: var(--sun-yellow); font-weight: bold; }
-        #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
+        #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
         #esText { font-size: 1.8rem; font-weight: bold; }
         #enText { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
-        .form-box { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; font-size: 1rem; }
-        .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; }
+        .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; width: 100%; margin-top: 10px; }
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
     </style>
@@ -50,7 +44,7 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     <div class="weather-box">
-        <a class="weatherwidget-io" href="https://forecast7.com/us/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-mode="Current" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
+        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-mode="Current" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
     </div>
 </div>
 
@@ -58,56 +52,53 @@
     <div class="card">
         <h3>📅 THE GAMEPLAN</h3>
         <div id="itinList"></div>
-        <div class="form-box">
-            <select id="inDay"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
-            <input type="text" id="inTime" placeholder="e.g. 3:00 PM">
-            <input type="text" id="inAct" placeholder="What are we doing?">
-            <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <h3>🎒 PACKING LIST</h3>
-        <div id="packList"></div>
-        <div class="form-box">
-            <input type="text" id="packInput" placeholder="Add item...">
-            <button onclick="addPackItem()" class="full-btn">ADD ITEM</button>
-            <button onclick="clearPacking()" style="background:none; border:none; color:var(--neon-pink); cursor:pointer; margin-top:5px;">Clear List</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <h3>😎 CREW VIBE CHECK</h3>
-        <div id="vibeList"></div>
-        <div class="form-box">
-            <input type="text" id="vibeInput" placeholder="Current vibe?">
-            <button onclick="updateVibe()" class="full-btn">UPDATE VIBE</button>
-        </div>
     </div>
 
     <div class="card">
         <h3>🇲🇽 BILINGUAL VIBES</h3>
         <div id="spanishCard" onclick="flipCard()">
-            <span id="esText">¡Hola!</span>
-            <span id="enText">Hello!</span>
+            <span id="esText">¡Vámonos!</span>
+            <span id="enText">Let's go!</span>
         </div>
-        <button onclick="nextPhrase()" class="full-btn" style="margin-top:15px; background:var(--sun-yellow);">NEXT PHRASE</button>
+        <button onclick="nextPhrase()" class="full-btn" style="background:var(--sun-yellow);">NEXT PHRASE</button>
     </div>
 </div>
 
 <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5tNwFc5x5LH7v4zjX1Ml_LYVQ2Nn-u-bLKm-veAC24T2BBThkv_TIU3rcMhRCeA93/exec'; 
     let myName = localStorage.getItem('mx_name');
-    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [{txt: "Passport & FMM Form", done: false}, {txt: "Sunscreen", done: false}];
-
+    
     const phrases = [
         {es: "¿Dónde está el baño?", en: "Where is the bathroom?"},
         {es: "Una cerveza mas, por favor", en: "One more beer, please"},
         {es: "La cuenta, por favor", en: "The check, please"},
-        {es: "¿Cuánto cuesta?", en: "How much does it cost?"},
         {es: "¡Salud!", en: "Cheers!"},
         {es: "Sin picante", en: "Not spicy"},
-        {es: "Está delicioso", en: "It's delicious"}
+        {es: "Está delicioso", en: "It's delicious"},
+        {es: "Me gustaría un tequila", en: "I would like a tequila"},
+        {es: "Mucho gusto", en: "Nice to meet you"},
+        {es: "¿Cómo te llamas?", en: "What is your name?"},
+        {es: "No entiendo", en: "I don't understand"},
+        {es: "¿Hablas inglés?", en: "Do you speak English?"},
+        {es: "Más despacio, por favor", en: "Slower, please"},
+        {es: "Tengo hambre", en: "I'm hungry"},
+        {es: "Tengo sed", en: "I'm thirsty"},
+        {es: "¿A qué hora?", en: "At what time?"},
+        {es: "A la playa", en: "To the beach"},
+        {es: "Está muy caro", en: "It is very expensive"},
+        {es: "¿Cuál es el mejor precio?", en: "What is the best price?"},
+        {es: "Necesito un taxi", en: "I need a taxi"},
+        {es: "¿Dónde está la fiesta?", en: "Where is the party?"},
+        {es: "Todo bien", en: "All good"},
+        {es: "Pura vida", en: "Pure life (Good vibes)"},
+        {es: "Ahorita", en: "Right now / In a minute"},
+        {es: "¿Qué onda?", en: "What's up?"},
+        {es: "Estoy cansado", en: "I am tired"},
+        {es: "¡Qué padre!", en: "That's cool!"},
+        {es: "Me encanta", en: "I love it"},
+        {es: "Buen provecho", en: "Enjoy your meal"},
+        {es: "Disculpe", en: "Excuse me"},
+        {es: "Perdón", en: "Sorry"}
     ];
 
     function flipCard() {
@@ -129,8 +120,6 @@
             if (myName) { document.getElementById('overlay').style.display = 'none'; }
             else { document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`).join(''); }
 
-            document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`).join('');
-
             const rows = data.itinerary;
             const listDiv = document.getElementById('itinList');
             listDiv.innerHTML = '';
@@ -147,39 +136,13 @@
                     grouped[day].forEach(item => { listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span></div>`; });
                 }
             });
-            renderPacking();
-            nextPhrase();
         } catch(e) { console.error(e); }
     }
 
-    async function updateVibe() {
-        const v = document.getElementById('vibeInput').value;
-        if (!v || !myName) return;
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ isSB: true, name: myName, vibe: v }) });
-        document.getElementById('vibeInput').value = '';
-        setTimeout(fetchData, 1000);
-    }
-
-    async function addItin() {
-        const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value;
-        if (!a) return;
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', isSB: true, day: d, time: t, activity: a }) });
-        document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
-        setTimeout(fetchData, 1000);
-    }
-
-    function renderPacking() {
-        const list = document.getElementById('packList');
-        list.innerHTML = packingItems.map((item, i) => `<div class="pack-item ${item.done ? 'done' : ''}"><span onclick="togglePack(${i})">${item.done ? '✅' : '⬜'} ${item.txt}</span><button onclick="deletePack(${i})" style="background:none; border:none; color:red; font-size:1.2rem; cursor:pointer;">&times;</button></div>`).join('');
-        localStorage.setItem('mx_packing', JSON.stringify(packingItems));
-    }
-    function addPackItem() { const input = document.getElementById('packInput'); if(!input.value) return; packingItems.push({txt: input.value, done: false}); input.value = ''; renderPacking(); }
-    function togglePack(i) { packingItems[i].done = !packingItems[i].done; renderPacking(); }
-    function deletePack(i) { packingItems.splice(i, 1); renderPacking(); }
-    function clearPacking() { if(confirm("Clear list?")) { packingItems = []; renderPacking(); } }
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+    
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
@@ -187,6 +150,7 @@
         document.getElementById('mins').innerText = Math.max(0, Math.floor((diff % 3600000) / 60000)).toString().padStart(2, '0');
         document.getElementById('secs').innerText = Math.max(0, Math.floor((diff % 60000) / 1000)).toString().padStart(2, '0');
     }, 1000);
+    
     fetchData();
 </script>
 </body>
