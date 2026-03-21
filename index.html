@@ -6,7 +6,7 @@
     <title>MEXICO 2026</title>
     <style>
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
-        body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 50px; }
+        body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
         .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 60px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
         .main-head { font-size: 5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
@@ -16,26 +16,17 @@
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
-        
-        /* Itinerary */
         .day-header { color: var(--neon-pink); font-size: 2rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; font-family: 'Impact'; }
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .itin-time { color: var(--ocean-blue); font-weight: 900; width: 95px; font-size: 0.9rem; flex-shrink: 0; }
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; }
-
-        /* Packing */
         .pack-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .pack-item.done span { text-decoration: line-through; opacity: 0.5; }
-
-        /* Vibe */
         .vibe-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--glass); }
         .vibe-status { color: var(--sun-yellow); font-weight: bold; }
-
-        /* Spanish Flashcard */
         #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
-        #esText { font-size: 1.8rem; font-weight: bold; display: block; }
+        #esText { font-size: 1.8rem; font-weight: bold; }
         #enText { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
-
         .form-box { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
         input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; }
         .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; }
@@ -65,7 +56,7 @@
 
 <div class="container">
     <div class="card">
-        <h3>📅 The Gameplan</h3>
+        <h3>📅 THE GAMEPLAN</h3>
         <div id="itinList"></div>
         <div class="form-box">
             <select id="inDay">
@@ -79,17 +70,17 @@
     </div>
 
     <div class="card">
-        <h3>🎒 Packing List</h3>
+        <h3>🎒 PACKING LIST</h3>
         <div id="packList"></div>
         <div class="form-box">
             <input type="text" id="packInput" placeholder="Add item...">
             <button onclick="addPackItem()" class="full-btn">ADD ITEM</button>
-            <button onclick="clearPacking()" style="background:none; border:none; color:var(--neon-pink); cursor:pointer;">Clear All</button>
+            <button onclick="clearPacking()" style="background:none; border:none; color:var(--neon-pink); cursor:pointer; margin-top:5px;">Clear All</button>
         </div>
     </div>
 
     <div class="card">
-        <h3>😎 Crew Vibe Check</h3>
+        <h3>😎 CREW VIBE CHECK</h3>
         <div id="vibeList"></div>
         <div class="form-box">
             <input type="text" id="vibeInput" placeholder="Current vibe?">
@@ -98,7 +89,7 @@
     </div>
 
     <div class="card">
-        <h3>🇲🇽 Bilingual Vibes</h3>
+        <h3>🇲🇽 BILINGUAL VIBES</h3>
         <div id="spanishCard" onclick="flipCard()">
             <span id="esText">¡Hola!</span>
             <span id="enText">Hello!</span>
@@ -108,9 +99,12 @@
 </div>
 
 <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ8WZUAm0GQJF9Rq7mvjTK1KvTk7VMcqvJp7aEXDv_M3ikl_lj7QdfeFvASS45MaYC/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5tNwFc5x5LH7v4zjX1Ml_LYVQ2Nn-u-bLKm-veAC24T2BBThkv_TIU3rcMhRCeA93/exec'; 
     let myName = localStorage.getItem('mx_name');
-    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [{txt: "Passport", done: false}];
+    let packingItems = JSON.parse(localStorage.getItem('mx_packing')) || [
+        {txt: "Passport & FMM", done: false},
+        {txt: "Sunscreen", done: false}
+    ];
 
     const phrases = [
         {es: "¿Dónde está el baño?", en: "Where is the bathroom?"},
@@ -132,19 +126,6 @@
         document.getElementById('esText').innerText = p.es;
         document.getElementById('enText').innerText = p.en;
         document.getElementById('enText').style.display = 'none';
-    }
-
-    function formatTime(t) {
-        if (!t) return '--';
-        if (typeof t === 'string' && t.includes('T')) {
-            const timeStr = t.split('T')[1].substring(0, 5); 
-            let [h, m] = timeStr.split(':');
-            h = parseInt(h);
-            const ampm = h >= 12 ? 'PM' : 'AM';
-            h = h % 12 || 12;
-            return `${h}:${m} ${ampm}`;
-        }
-        return t; 
     }
 
     async function fetchData() {
@@ -172,7 +153,7 @@
                 const [day, time, act] = rows[i];
                 if (!act) continue;
                 if (!grouped[day]) grouped[day] = [];
-                grouped[day].push({ time: formatTime(time), act });
+                grouped[day].push({ time, act });
             }
             ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
                 if (grouped[day]) {
@@ -223,7 +204,7 @@
     }
     function togglePack(i) { packingItems[i].done = !packingItems[i].done; renderPacking(); }
     function deletePack(i) { packingItems.splice(i, 1); renderPacking(); }
-    function clearPacking() { if(confirm("Clear all?")) { packingItems = []; renderPacking(); } }
+    function clearPacking() { if(confirm("Clear list?")) { packingItems = []; renderPacking(); } }
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
