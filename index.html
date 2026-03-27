@@ -7,23 +7,17 @@
     <style>
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
         body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
-        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 30px 10px 10px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
+        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 30px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
         .main-head { font-size: 4.5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 15px; }
         .unit span { display: block; font-size: 2.2rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
-        
-        /* Fixed Weather Box - Shorter & Centered */
-        .weather-crop { 
-            width: 320px; 
-            height: 150px; 
-            margin: 0 auto; 
-            overflow: hidden; 
-            border-radius: 15px; 
-            border: 1px solid var(--ocean-blue); 
-            background: rgba(0,0,0,0.5); 
-        }
-        .weather-crop iframe { margin-top: -15px; } /* Pulls the content up to hide widget branding */
+
+        /* Custom Weather Grid - No Trashy Graphics */
+        .weather-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 400px; margin: 10px auto; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--ocean-blue); border-radius: 15px; min-height: 100px; align-items: center; }
+        .w-day { font-size: 0.7rem; color: var(--ocean-blue); font-weight: bold; }
+        .w-temp { font-size: 1.1rem; color: #fff; margin-top: 2px; }
+        .w-icon { width: 40px; height: 40px; margin: 0 auto; display: block; }
 
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
@@ -37,6 +31,7 @@
         .form-box { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
         input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; font-size: 1rem; }
         .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; width: 100%; margin-top: 10px; }
+        
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
         #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
@@ -47,7 +42,7 @@
 <body>
 
 <div id="overlay">
-    <h1 style="color:var(--neon-pink); font-size: 3rem;">MEXICO 2026</h1>
+    <h1 style="color:var(--neon-pink); font-size: 3.5rem;">MEXICO 2026</h1>
     <div id="nameList">Connecting...</div>
 </div>
 
@@ -59,10 +54,7 @@
         <div class="unit"><span id="mins">00</span>MIN</div>
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
-    
-    <div class="weather-crop">
-        <iframe src="https://www.meteoblue.com/en/weather/widget/three/canc%c3%ban_mexico_3531673?geoloc=fixed&nocurrent=0&nooo=1&days=4&tempunit=FAHRENHEIT&windunit=MILE_PER_HOUR&layout=dark" frameborder="0" scrolling="NO" allowtransparency="true" style="width: 100%; height: 210px"></iframe>
-    </div>
+    <div id="weather-display" class="weather-grid">Loading Weather...</div>
 </div>
 
 <div class="container">
@@ -70,113 +62,77 @@
         <h3>📅 THE GAMEPLAN</h3>
         <div id="itinList"></div>
         <div class="form-box">
-            <select id="inDay">
-                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-                <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-            </select>
-            <input type="text" id="inTime" placeholder="Time">
-            <input type="text" id="inAct" placeholder="Activity">
-            <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
+            <select id="inDay"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+            <input type="text" id="inTime" placeholder="Time"><input type="text" id="inAct" placeholder="Activity"><button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
-
     <div class="card">
         <h3>😎 CREW VIBES</h3>
         <div id="vibeList"></div>
         <div class="form-box">
-            <input type="text" id="vibeInput" placeholder="Update status...">
-            <button onclick="updateVibe()" class="full-btn">UPDATE</button>
+            <input type="text" id="vibeInput" placeholder="Update status..."><button onclick="updateVibe()" class="full-btn">UPDATE</button>
         </div>
     </div>
-
     <div class="card">
         <h3>🇲🇽 FLASHCARDS</h3>
-        <div id="spanishCard" onclick="flipCard()">
-            <span id="esText">Tap for Spanish</span>
-            <span id="enText"></span>
-        </div>
+        <div id="spanishCard" onclick="flipCard()"><span id="esText">Tap for Spanish</span><span id="enText"></span></div>
         <button onclick="nextPhrase()" class="full-btn" style="background:var(--sun-yellow);">NEXT</button>
     </div>
 </div>
 
 <script>
+    const WEATHER_API_KEY = 'a953259cf067ae58338207db13580c6a'; 
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLu3DlbvYPLJhfzdKItF99DHzZQal9iTFsqPLxXKinMYymqfgyBTsEw0zJ3M3u-xWc/exec'; 
-    let myName = localStorage.getItem('mx_name');
-    let allPhrases = [];
+    let myName = localStorage.getItem('mx_name'), allPhrases = [];
 
-    function flipCard() {
-        const en = document.getElementById('enText');
-        en.style.display = (en.style.display === 'none' || en.style.display === '') ? 'block' : 'none';
+    async function fetchWeather() {
+        try {
+            const url = `https://api.openweathermap.org/data/2.5/forecast?lat=21.16&lon=-86.85&units=imperial&appid=${WEATHER_API_KEY}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            let html = '';
+            for (let i = 0; i < data.list.length; i += 8) {
+                const day = data.list[i];
+                const date = new Date(day.dt * 1000).toLocaleDateString('en', {weekday: 'short'});
+                const icon = `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
+                html += `<div><div class="w-day">${date.toUpperCase()}</div><img src="${icon}" class="w-icon"><div class="w-temp">${Math.round(day.main.temp)}°</div></div>`;
+            }
+            document.getElementById('weather-display').innerHTML = html;
+        } catch(e) { document.getElementById('weather-display').innerText = "Weather Warming Up..."; }
     }
 
-    function nextPhrase() {
-        if (allPhrases.length === 0) return;
-        const p = allPhrases[Math.floor(Math.random() * allPhrases.length)];
-        document.getElementById('esText').innerText = p[0];
-        document.getElementById('enText').innerText = p[1];
-        document.getElementById('enText').style.display = 'none';
-    }
+    function flipCard() { const en = document.getElementById('enText'); en.style.display = (en.style.display === 'none' || en.style.display === '') ? 'block' : 'none'; }
+    function nextPhrase() { if (!allPhrases.length) return; const p = allPhrases[Math.floor(Math.random() * allPhrases.length)]; document.getElementById('esText').innerText = p[0]; document.getElementById('enText').innerText = p[1]; document.getElementById('enText').style.display = 'none'; }
 
     async function fetchData() {
         try {
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
             if (myName) { document.getElementById('overlay').style.display = 'none'; } 
-            else if (data.status) { 
-                document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => 
-                    `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`
-                ).join(''); 
-            }
-            if (data.status) {
-                document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
-                    `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
-                ).join('');
-            }
+            else if (data.status) { document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`).join(''); }
+            if (data.status) { document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`).join(''); }
             if (data.itinerary) {
-                const rows = data.itinerary;
-                const listDiv = document.getElementById('itinList');
-                listDiv.innerHTML = '';
-                const grouped = {};
-                for (let i = 1; i < rows.length; i++) {
-                    const [day, time, act] = rows[i];
-                    if (!act) continue;
-                    if (!grouped[day]) grouped[day] = [];
-                    grouped[day].push({ time, act });
-                }
-                ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
-                    if (grouped[day]) {
-                        listDiv.innerHTML += `<div class="day-header">${day}</div>`;
-                        grouped[day].forEach(item => { 
-                            listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span></div>`; 
-                        });
-                    }
-                });
+                const rows = data.itinerary, listDiv = document.getElementById('itinList');
+                listDiv.innerHTML = ''; const grouped = {};
+                for (let i = 1; i < rows.length; i++) { const [day, time, act] = rows[i]; if (!act) continue; if (!grouped[day]) grouped[day] = []; grouped[day].push({ time, act }); }
+                ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => { if (grouped[day]) { listDiv.innerHTML += `<div class="day-header">${day}</div>`; grouped[day].forEach(item => { listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span></div>`; }); } });
             }
-            if (data.phrases && data.phrases.length > 1) {
-                allPhrases = data.phrases.slice(1);
-                nextPhrase();
-            }
+            if (data.phrases) { allPhrases = data.phrases.slice(1); nextPhrase(); }
         } catch(e) { console.error(e); }
     }
 
     async function updateVibe() {
-        const v = document.getElementById('vibeInput').value;
-        if (!v || !myName) return;
+        const v = document.getElementById('vibeInput').value; if (!v || !myName) return;
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ isSB: true, name: myName, vibe: v }) });
-        document.getElementById('vibeInput').value = '';
-        setTimeout(fetchData, 1200);
+        document.getElementById('vibeInput').value = ''; setTimeout(fetchData, 1200);
     }
-
     async function addItin() {
-        const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value;
-        if (!a) return;
+        const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value; if (!a) return;
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', isSB: true, day: d, time: t, activity: a }) });
-        document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
-        setTimeout(fetchData, 1200);
+        document.getElementById('inAct').value = ''; document.getElementById('inTime').value = ''; setTimeout(fetchData, 1200);
     }
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
-
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
@@ -185,7 +141,7 @@
         document.getElementById('secs').innerText = Math.max(0, Math.floor((diff % 60000) / 1000)).toString().padStart(2, '0');
     }, 1000);
 
-    fetchData();
+    fetchData(); fetchWeather();
 </script>
 </body>
 </html>
