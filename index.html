@@ -21,8 +21,8 @@
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
-        .day-header { color: var(--neon-pink); font-size: 1.8rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; font-family: 'Impact'; }
         
+        .day-header { color: var(--neon-pink); font-size: 1.8rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; font-family: 'Impact'; }
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
         .itin-time { color: var(--ocean-blue); font-weight: 900; width: 85px; font-size: 0.85rem; flex-shrink: 0; }
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1rem; padding-right: 30px; }
@@ -31,9 +31,15 @@
 
         .vibe-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--glass); }
         .vibe-status { color: var(--sun-yellow); font-weight: bold; }
+        
+        #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 100px; display: flex; flex-direction: column; justify-content: center; margin-top: 10px; }
+        #esText { font-size: 1.6rem; font-weight: bold; }
+        #enText { font-size: 1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
+
         .form-box { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
         input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; font-size: 1rem; }
         .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; width: 100%; margin-top: 10px; }
+        
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
     </style>
@@ -65,6 +71,7 @@
             <input type="text" id="inTime" placeholder="Time"><input type="text" id="inAct" placeholder="Activity"><button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
+
     <div class="card">
         <h3>😎 CREW VIBES</h3>
         <div id="vibeList"></div>
@@ -72,12 +79,21 @@
             <input type="text" id="vibeInput" placeholder="Update status..."><button onclick="updateVibe()" class="full-btn">UPDATE</button>
         </div>
     </div>
+
+    <div class="card">
+        <h3>🇲🇽 FLASHCARDS</h3>
+        <div id="spanishCard" onclick="flipCard()">
+            <span id="esText">Tap for Spanish</span>
+            <span id="enText"></span>
+        </div>
+        <button onclick="nextPhrase()" class="full-btn" style="background:var(--sun-yellow);">NEXT</button>
+    </div>
 </div>
 
 <script>
     const WEATHER_API_KEY = 'a953259cf067ae58338207db13580c6a'; 
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbza-bELEpB1xW4qwNVxRP3W6TIWGvUjVM4lUpKm5jPWd1qGl-vYKLxrLzhJc1sURU88/exec'; 
-    let myName = localStorage.getItem('mx_name');
+    let myName = localStorage.getItem('mx_name'), allPhrases = [];
 
     async function fetchWeather() {
         try {
@@ -92,6 +108,9 @@
             document.getElementById('weather-display').innerHTML = html;
         } catch(e) { document.getElementById('weather-display').innerText = "Weather Warming Up..."; }
     }
+
+    function flipCard() { const en = document.getElementById('enText'); en.style.display = (en.style.display === 'none' || en.style.display === '') ? 'block' : 'none'; }
+    function nextPhrase() { if (!allPhrases.length) return; const p = allPhrases[Math.floor(Math.random() * allPhrases.length)]; document.getElementById('esText').innerText = p[0]; document.getElementById('enText').innerText = p[1]; document.getElementById('enText').style.display = 'none'; }
 
     async function fetchData() {
         try {
@@ -124,12 +143,12 @@
                     }
                 });
             }
+            if (data.phrases) { allPhrases = data.phrases.slice(1); nextPhrase(); }
         } catch(e) { console.error(e); }
     }
 
     async function deleteItem(d, t, a) {
         if(!confirm("Delete this?")) return;
-        // The script URL now handles the 'deleteItin' action via the POST payload
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'deleteItin', day: d, time: t, activity: a }) });
         setTimeout(fetchData, 1000);
     }
