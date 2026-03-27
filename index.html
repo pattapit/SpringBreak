@@ -12,7 +12,7 @@
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
         .unit span { display: block; font-size: 2.5rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
-        .weather-box { margin: 10px auto; max-width: 320px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); min-height: 100px; padding: 10px; }
+        .weather-box { margin: 10px auto; max-width: 320px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); min-height: 100px; padding: 10px; overflow: hidden; }
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
@@ -25,6 +25,8 @@
         #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
         #esText { font-size: 1.8rem; font-weight: bold; }
         #enText { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
+        .form-box { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; font-size: 1rem; }
         .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; width: 100%; margin-top: 10px; }
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
@@ -46,7 +48,7 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     <div class="weather-box">
-        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
+        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/?unit=us" data-label_1="CANCUN" data-label_2="WEATHER" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
     </div>
 </div>
 
@@ -54,11 +56,24 @@
     <div class="card">
         <h3>📅 THE GAMEPLAN</h3>
         <div id="itinList"></div>
+        <div class="form-box">
+            <select id="inDay">
+                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+            </select>
+            <input type="text" id="inTime" placeholder="e.g. 3:00 PM">
+            <input type="text" id="inAct" placeholder="What are we doing?">
+            <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
+        </div>
     </div>
 
     <div class="card">
         <h3>😎 CREW VIBE CHECK</h3>
         <div id="vibeList"></div>
+        <div class="form-box">
+            <input type="text" id="vibeInput" placeholder="Current vibe?">
+            <button onclick="updateVibe()" class="full-btn">UPDATE VIBE</button>
+        </div>
     </div>
 
     <div class="card">
@@ -72,7 +87,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOauMsA2xWRA9nNUnT5xfHeYZ94PoszSMJN3QfTJdmJBZVa21mb8Uu5N7dY21JZP8r/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOauMsA2xWRA9nNUnT5xfHeYZ94PoszSMJN3QfTJdmJBZVa21mb8Uu5Y7dY21JZP8r/exec'; 
     let myName = localStorage.getItem('mx_name');
     let allPhrases = [];
 
@@ -94,7 +109,6 @@
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
             
-            // Handle Name Selection
             if (myName) { 
                 document.getElementById('overlay').style.display = 'none'; 
             } else { 
@@ -103,12 +117,10 @@
                 ).join(''); 
             }
 
-            // Render Vibes
             document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
                 `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
             ).join('');
 
-            // Render Itinerary (Display exact text from sheet)
             const rows = data.itinerary;
             const listDiv = document.getElementById('itinList');
             listDiv.innerHTML = '';
@@ -128,7 +140,6 @@
                 }
             });
 
-            // Load Phrases from Sheet
             if (data.phrases && data.phrases.length > 1) {
                 allPhrases = data.phrases.slice(1);
                 nextPhrase();
@@ -137,12 +148,26 @@
         } catch(e) { console.error(e); }
     }
 
+    async function updateVibe() {
+        const v = document.getElementById('vibeInput').value;
+        if (!v || !myName) return;
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ isSB: true, name: myName, vibe: v }) });
+        document.getElementById('vibeInput').value = '';
+        setTimeout(fetchData, 1200);
+    }
+
+    async function addItin() {
+        const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value;
+        if (!a) return;
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', isSB: true, day: d, time: t, activity: a }) });
+        document.getElementById('inAct').value = ''; document.getElementById('inTime').value = '';
+        setTimeout(fetchData, 1200);
+    }
+
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
-    // Weather Widget Script
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 
-    // Countdown Logic
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
