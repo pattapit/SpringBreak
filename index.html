@@ -92,7 +92,8 @@
 
 <script>
     const WEATHER_API_KEY = 'a953259cf067ae58338207db13580c6a'; 
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbza-bELEpB1xW4qwNVxRP3W6TIWGvUjVM4lUpKm5jPWd1qGl-vYKLxrLzhJc1sURU88/exec'; 
+    // UPDATED URL TO MATCH YOUR NEW DEPLOYMENT
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0Fp2z6gy0fy0LKcUFY2D4ffSgM89zbD02R23M-QQ0rWdABwnX1qNba5UKo1KmmzjC/exec'; 
     let myName = localStorage.getItem('mx_name'), allPhrases = [];
 
     async function fetchWeather() {
@@ -114,6 +115,7 @@
 
     async function fetchData() {
         try {
+            // Adds ?app=sb so doGet knows to pull Mexico tabs
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
             if (myName) { document.getElementById('overlay').style.display = 'none'; } 
@@ -149,18 +151,21 @@
 
     async function deleteItem(d, t, a) {
         if(!confirm("Delete this?")) return;
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'deleteItin', day: d, time: t, activity: a }) });
+        // Added isSB: true so script looks at SB_Itinerary
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'deleteItin', isSB: true, day: d, time: t, activity: a }) });
         setTimeout(fetchData, 1000);
     }
 
     async function updateVibe() {
         const v = document.getElementById('vibeInput').value; if (!v || !myName) return;
+        // Added isSB: true so script looks at SB_Status
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ isSB: true, name: myName, vibe: v }) });
         document.getElementById('vibeInput').value = ''; setTimeout(fetchData, 1000);
     }
 
     async function addItin() {
         const d = document.getElementById('inDay').value, t = document.getElementById('inTime').value, a = document.getElementById('inAct').value; if (!a) return;
+        // isSB: true ensures it goes to SB_Itinerary
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addItin', isSB: true, day: d, time: t, activity: a }) });
         document.getElementById('inAct').value = ''; document.getElementById('inTime').value = ''; setTimeout(fetchData, 1000);
     }
