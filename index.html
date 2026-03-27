@@ -36,6 +36,7 @@
 <div id="overlay">
     <h1 style="color:var(--neon-pink); font-size: 4rem;">MEXICO 2026</h1>
     <div id="nameList">Connecting to Sheet...</div>
+    <button onclick="document.getElementById('overlay').style.display='none'" style="margin-top:20px; background:none; color:white; border:1px solid white; padding:5px; font-size:0.7rem;">SKIP (DEBUG)</button>
 </div>
 
 <div class="hero">
@@ -46,7 +47,7 @@
         <div class="unit"><span id="mins">00</span>MIN</div>
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
-    <a href="https://forecast7.com/en/21d16n86d85/cancun/" style="color:var(--ocean-blue); text-decoration:none; border:1px solid var(--ocean-blue); padding:10px; border-radius:10px;">WEATHER FORECAST ☀️</a>
+    <a href="https://forecast7.com/en/21d16n86d85/cancun/" target="_blank" style="color:var(--ocean-blue); text-decoration:none; border:1px solid var(--ocean-blue); padding:10px; border-radius:10px;">WEATHER FORECAST ☀️</a>
 </div>
 
 <div class="container">
@@ -59,8 +60,8 @@
                 <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
             </select>
             <input type="text" id="inTime" placeholder="Time (e.g. 3 PM)">
-            <input type="text" id="inAct" placeholder="Activity">
-            <button onclick="addItin()" class="full-btn">UPDATE GAMEPLAN</button>
+            <input type="text" id="inAct" placeholder="What are we doing?">
+            <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
 
@@ -68,13 +69,13 @@
         <h3>😎 CREW VIBE CHECK</h3>
         <div id="vibeList"></div>
         <div class="form-box">
-            <input type="text" id="vibeInput" placeholder="What's your vibe?">
-            <button onclick="updateVibe()" class="full-btn">SET VIBE</button>
+            <input type="text" id="vibeInput" placeholder="How's the vibe?">
+            <button onclick="updateVibe()" class="full-btn">UPDATE STATUS</button>
         </div>
     </div>
 
     <div class="card">
-        <h3>🇲🇽 SPANISH FLASHCARDS</h3>
+        <h3>🇲🇽 BILINGUAL PHRASES</h3>
         <div id="spanishCard" onclick="flipCard()">
             <span id="esText">Tap for Spanish</span>
             <span id="enText"></span>
@@ -84,7 +85,8 @@
 </div>
 
 <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOauMsA2xWRA9nNUnT5xfHeYZ94PoszSMJN3QfTJdmJBZVa21mb8Uu5Y7dY21JZP8r/exec'; 
+    // Updated Script URL
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLu3DlbvYPLJhfzdKItF99DHzZQal9iTFsqPLxXKinMYymqfgyBTsEw0zJ3M3u-xWc/exec'; 
     let myName = localStorage.getItem('mx_name');
     let allPhrases = [];
 
@@ -94,10 +96,7 @@
     }
 
     function nextPhrase() {
-        if (allPhrases.length === 0) {
-             document.getElementById('esText').innerText = "Add phrases to SB_Phrases tab!";
-             return;
-        }
+        if (allPhrases.length === 0) return;
         const p = allPhrases[Math.floor(Math.random() * allPhrases.length)];
         document.getElementById('esText').innerText = p[0];
         document.getElementById('enText').innerText = p[1];
@@ -109,25 +108,23 @@
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
             
-            // Name Selection Logic
+            // Handle Crew Names for Login
             if (myName) { 
                 document.getElementById('overlay').style.display = 'none'; 
-            } else if (data.status && data.status.length > 1) { 
+            } else if (data.status) { 
                 document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => 
                     `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`
                 ).join(''); 
-            } else {
-                document.getElementById('nameList').innerText = "No names found in SB_Status Column A";
             }
 
-            // Vibe Rendering
+            // Render Statuses
             if (data.status) {
                 document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
                     `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
                 ).join('');
             }
 
-            // Itinerary Rendering
+            // Render Itinerary
             if (data.itinerary) {
                 const rows = data.itinerary;
                 const listDiv = document.getElementById('itinList');
@@ -149,16 +146,13 @@
                 });
             }
 
-            // Phrase Loading
+            // Load Phrases
             if (data.phrases && data.phrases.length > 1) {
                 allPhrases = data.phrases.slice(1);
                 nextPhrase();
             }
 
-        } catch(e) { 
-            console.error("Fetch Error:", e);
-            document.getElementById('nameList').innerText = "Error connecting. Check Script Deployment.";
-        }
+        } catch(e) { console.error("Fetch Error:", e); }
     }
 
     async function updateVibe() {
@@ -179,7 +173,7 @@
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
-    // Countdown
+    // Countdown Logic
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
