@@ -12,7 +12,6 @@
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
         .unit span { display: block; font-size: 2.5rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
-        .weather-box { margin: 10px auto; max-width: 320px; border-radius: 15px; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); min-height: 100px; padding: 10px; overflow: hidden; }
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
@@ -22,21 +21,22 @@
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; }
         .vibe-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--glass); }
         .vibe-status { color: var(--sun-yellow); font-weight: bold; }
-        #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
-        #esText { font-size: 1.8rem; font-weight: bold; }
-        #enText { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
         .form-box { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
         input, select { background: rgba(0,0,0,0.4); border: 2px solid var(--ocean-blue); color: #fff; padding: 12px; border-radius: 12px; font-size: 1rem; }
         .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; width: 100%; margin-top: 10px; }
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
+        #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
+        #esText { font-size: 1.8rem; font-weight: bold; }
+        #enText { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
     </style>
 </head>
 <body>
 
 <div id="overlay">
     <h1 style="color:var(--neon-pink); font-size: 4rem;">MEXICO 2026</h1>
-    <div id="nameList">Loading Crew...</div>
+    <div id="nameList">Waiting for Google Sheets...</div>
+    <button onclick="document.getElementById('overlay').style.display='none'" style="margin-top:20px; background:none; color:white; border:1px solid white; padding:5px; font-size:0.7rem;">SKIP (DEBUG)</button>
 </div>
 
 <div class="hero">
@@ -47,9 +47,7 @@
         <div class="unit"><span id="mins">00</span>MIN</div>
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
-    <div class="weather-box">
-        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/?unit=us" data-label_1="CANCUN" data-label_2="WEATHER" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-units="us">CANCUN WEATHER</a>
-    </div>
+    <a href="https://forecast7.com/en/21d16n86d85/cancun/" style="color:var(--ocean-blue); text-decoration:none; border:1px solid var(--ocean-blue); padding:10px; border-radius:10px;">VIEW CANCUN WEATHER ☀️</a>
 </div>
 
 <div class="container">
@@ -61,8 +59,8 @@
                 <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
                 <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
             </select>
-            <input type="text" id="inTime" placeholder="e.g. 3:00 PM">
-            <input type="text" id="inAct" placeholder="What are we doing?">
+            <input type="text" id="inTime" placeholder="3:00 PM">
+            <input type="text" id="inAct" placeholder="What's the move?">
             <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
@@ -71,7 +69,7 @@
         <h3>😎 CREW VIBE CHECK</h3>
         <div id="vibeList"></div>
         <div class="form-box">
-            <input type="text" id="vibeInput" placeholder="Current vibe?">
+            <input type="text" id="vibeInput" placeholder="Update your status...">
             <button onclick="updateVibe()" class="full-btn">UPDATE VIBE</button>
         </div>
     </div>
@@ -111,41 +109,45 @@
             
             if (myName) { 
                 document.getElementById('overlay').style.display = 'none'; 
-            } else { 
+            } else if (data.status) { 
                 document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => 
                     `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`
                 ).join(''); 
             }
 
-            document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
-                `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
-            ).join('');
-
-            const rows = data.itinerary;
-            const listDiv = document.getElementById('itinList');
-            listDiv.innerHTML = '';
-            const grouped = {};
-            for (let i = 1; i < rows.length; i++) {
-                const [day, time, act] = rows[i];
-                if (!act) continue;
-                if (!grouped[day]) grouped[day] = [];
-                grouped[day].push({ time, act });
+            if (data.status) {
+                document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
+                    `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
+                ).join('');
             }
-            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
-                if (grouped[day]) {
-                    listDiv.innerHTML += `<div class="day-header">${day}</div>`;
-                    grouped[day].forEach(item => { 
-                        listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span></div>`; 
-                    });
+
+            if (data.itinerary) {
+                const rows = data.itinerary;
+                const listDiv = document.getElementById('itinList');
+                listDiv.innerHTML = '';
+                const grouped = {};
+                for (let i = 1; i < rows.length; i++) {
+                    const [day, time, act] = rows[i];
+                    if (!act) continue;
+                    if (!grouped[day]) grouped[day] = [];
+                    grouped[day].push({ time, act });
                 }
-            });
+                ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].forEach(day => {
+                    if (grouped[day]) {
+                        listDiv.innerHTML += `<div class="day-header">${day}</div>`;
+                        grouped[day].forEach(item => { 
+                            listDiv.innerHTML += `<div class="itin-row"><span class="itin-time">${item.time}</span><span class="itin-act">${item.act}</span></div>`; 
+                        });
+                    }
+                });
+            }
 
             if (data.phrases && data.phrases.length > 1) {
                 allPhrases = data.phrases.slice(1);
                 nextPhrase();
             }
 
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error("Fetch Error:", e); }
     }
 
     async function updateVibe() {
@@ -165,8 +167,6 @@
     }
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
-
-    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
