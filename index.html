@@ -7,15 +7,19 @@
     <style>
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
         body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
-        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 60px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
-        .main-head { font-size: 5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
+        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 40px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
+        .main-head { font-size: 4.5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
-        .unit span { display: block; font-size: 2.5rem; color: var(--sun-yellow); }
+        .unit span { display: block; font-size: 2.2rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
+        
+        /* Fixed Weather Widget Box */
+        .weather-container { margin: 10px auto; max-width: 350px; background: rgba(0,0,0,0.7); border: 2px solid var(--ocean-blue); border-radius: 15px; overflow: hidden; height: 150px; }
+
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
         h3 { margin: 0 0 15px 0; color: var(--ocean-blue); border-bottom: 2px solid var(--ocean-blue); display: inline-block; text-transform: uppercase; }
-        .day-header { color: var(--neon-pink); font-size: 2rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; font-family: 'Impact'; }
+        .day-header { color: var(--neon-pink); font-size: 1.8rem; border-bottom: 2px solid var(--neon-pink); margin: 25px 0 10px 0; text-transform: uppercase; font-family: 'Impact'; }
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .itin-time { color: var(--ocean-blue); font-weight: 900; width: 95px; font-size: 0.9rem; flex-shrink: 0; }
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1.1rem; }
@@ -26,17 +30,16 @@
         .full-btn { background: var(--ocean-blue); border: none; padding: 15px; border-radius: 12px; font-family: 'Impact'; font-size: 1.2rem; cursor: pointer; color: black; width: 100%; margin-top: 10px; }
         #overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .name-btn { margin: 10px; padding: 20px; width: 280px; background: var(--sun-yellow); border: none; border-radius: 20px; font-size: 1.4rem; font-family: 'Impact'; color: black; }
-        #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
-        #esText { font-size: 1.8rem; font-weight: bold; }
-        #enText { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
+        #spanishCard { background: var(--neon-pink); color: white; padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
+        #esText { font-size: 1.6rem; font-weight: bold; }
+        #enText { font-size: 1rem; opacity: 0.9; margin-top: 10px; display: none; font-style: italic; }
     </style>
 </head>
 <body>
 
 <div id="overlay">
-    <h1 style="color:var(--neon-pink); font-size: 4rem;">MEXICO 2026</h1>
+    <h1 style="color:var(--neon-pink); font-size: 3rem;">MEXICO 2026</h1>
     <div id="nameList">Connecting to Sheet...</div>
-    <button onclick="document.getElementById('overlay').style.display='none'" style="margin-top:20px; background:none; color:white; border:1px solid white; padding:5px; font-size:0.7rem;">SKIP (DEBUG)</button>
 </div>
 
 <div class="hero">
@@ -47,7 +50,10 @@
         <div class="unit"><span id="mins">00</span>MIN</div>
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
-    <a href="https://forecast7.com/en/21d16n86d85/cancun/" target="_blank" style="color:var(--ocean-blue); text-decoration:none; border:1px solid var(--ocean-blue); padding:10px; border-radius:10px;">WEATHER FORECAST ☀️</a>
+    
+    <div class="weather-container">
+        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-font="Roboto" data-icons="Climacons Animated" data-mode="Forecast" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-highcolor="#ff007f" data-lowcolor="#fdbb2d" data-suncolor="#fdbb2d" data-mooncolor="#00d4ff" data-cloudcolor="#00d4ff" data-cloudfill="rgba(0,0,0,0)" data-raincolor="#00d4ff" data-snowcolor="#00d4ff" data-units="us" >CANCUN WEATHER</a>
+    </div>
 </div>
 
 <div class="container">
@@ -60,7 +66,7 @@
                 <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
             </select>
             <input type="text" id="inTime" placeholder="Time (e.g. 3 PM)">
-            <input type="text" id="inAct" placeholder="What are we doing?">
+            <input type="text" id="inAct" placeholder="What's the move?">
             <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
@@ -69,13 +75,13 @@
         <h3>😎 CREW VIBE CHECK</h3>
         <div id="vibeList"></div>
         <div class="form-box">
-            <input type="text" id="vibeInput" placeholder="How's the vibe?">
-            <button onclick="updateVibe()" class="full-btn">UPDATE STATUS</button>
+            <input type="text" id="vibeInput" placeholder="Update your status...">
+            <button onclick="updateVibe()" class="full-btn">UPDATE VIBE</button>
         </div>
     </div>
 
     <div class="card">
-        <h3>🇲🇽 BILINGUAL PHRASES</h3>
+        <h3>🇲🇽 SPANISH FLASHCARDS</h3>
         <div id="spanishCard" onclick="flipCard()">
             <span id="esText">Tap for Spanish</span>
             <span id="enText"></span>
@@ -85,10 +91,12 @@
 </div>
 
 <script>
-    // Updated Script URL
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLu3DlbvYPLJhfzdKItF99DHzZQal9iTFsqPLxXKinMYymqfgyBTsEw0zJ3M3u-xWc/exec'; 
     let myName = localStorage.getItem('mx_name');
     let allPhrases = [];
+
+    // Weather Widget Script
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 
     function flipCard() {
         const en = document.getElementById('enText');
@@ -108,7 +116,6 @@
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
             
-            // Handle Crew Names for Login
             if (myName) { 
                 document.getElementById('overlay').style.display = 'none'; 
             } else if (data.status) { 
@@ -117,14 +124,12 @@
                 ).join(''); 
             }
 
-            // Render Statuses
             if (data.status) {
                 document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
                     `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
                 ).join('');
             }
 
-            // Render Itinerary
             if (data.itinerary) {
                 const rows = data.itinerary;
                 const listDiv = document.getElementById('itinList');
@@ -146,13 +151,12 @@
                 });
             }
 
-            // Load Phrases
             if (data.phrases && data.phrases.length > 1) {
                 allPhrases = data.phrases.slice(1);
                 nextPhrase();
             }
 
-        } catch(e) { console.error("Fetch Error:", e); }
+        } catch(e) { console.error(e); }
     }
 
     async function updateVibe() {
@@ -173,7 +177,6 @@
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
-    // Countdown Logic
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
