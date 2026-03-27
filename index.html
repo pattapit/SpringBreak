@@ -9,15 +9,18 @@
         body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
         .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 30px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
         .main-head { font-size: 4.5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
+        
+        /* COUNTDOWN */
         #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 15px; }
         .unit span { display: block; font-size: 2.2rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
         
-        /* WEATHER FIXED: Adjusted grid for 5 days and added spacing */
-        .weather-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-width: 500px; margin: 15px auto; padding: 15px; background: rgba(0,0,0,0.7); border: 1px solid var(--ocean-blue); border-radius: 15px; align-items: center; }
-        .w-day { font-size: 0.65rem; color: var(--ocean-blue); font-weight: bold; margin-bottom: 2px; }
-        .w-temp { font-size: 1rem; color: #fff; font-weight: bold; }
-        .w-icon { width: 35px; height: 35px; margin: 0 auto; display: block; }
+        /* WEATHER 2.0 - SLEEK PILLS */
+        .weather-grid { display: flex; justify-content: space-between; gap: 6px; max-width: 550px; margin: 20px auto; padding: 0 10px; }
+        .weather-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 12px; padding: 8px 4px; flex: 1; text-align: center; backdrop-filter: blur(5px); }
+        .w-day { font-size: 0.6rem; color: var(--ocean-blue); margin-bottom: 2px; font-weight: bold; }
+        .w-temp { font-size: 1.1rem; color: #fff; font-weight: bold; font-family: 'Impact'; }
+        .w-icon { width: 30px; height: 30px; margin: 0 auto; display: block; filter: drop-shadow(0 0 3px var(--ocean-blue)); }
 
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
@@ -27,7 +30,8 @@
         .itin-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .itin-time { color: var(--ocean-blue); font-weight: 900; width: 85px; font-size: 0.85rem; flex-shrink: 0; }
         .itin-act { flex-grow: 1; font-weight: bold; font-size: 1rem; padding-right: 10px; }
-        .del-btn { color: #ff4444; font-weight: bold; padding: 10px; cursor: pointer; font-size: 1.2rem; opacity: 0.5; }
+        .del-btn { color: #ff4444; font-weight: bold; padding: 10px; cursor: pointer; font-size: 1.2rem; opacity: 0.4; transition: 0.3s; }
+        .del-btn:hover { opacity: 1; }
 
         .vibe-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--glass); }
         .vibe-status { color: var(--sun-yellow); font-weight: bold; }
@@ -68,7 +72,7 @@
         <div id="itinList"></div>
         <div class="form-box">
             <select id="inDay"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
-            <input type="text" id="inTime" placeholder="Time"><input type="text" id="inAct" placeholder="Activity"><button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
+            <input type="text" id="inTime" placeholder="Time (e.g. 3:00 PM)"><input type="text" id="inAct" placeholder="Activity"><button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
 
@@ -92,7 +96,7 @@
 
 <script>
     const WEATHER_API_KEY = 'a953259cf067ae58338207db13580c6a'; 
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0Fp2z6gy0fy0LKcUFY2D4ffSgM89zbD02R23M-QQ0rWdABwnX1qNba5UKo1KmmzjC/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwwcIIFlcJBDDMviw0vBOc7VXFO2jF7wXig3ul8HlLsyZl5joFDyrtbQ-cknTDnTdy/exec'; 
     let myName = localStorage.getItem('mx_name'), allPhrases = [];
 
     async function fetchWeather() {
@@ -100,13 +104,18 @@
             const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=21.16&lon=-86.85&units=imperial&appid=${WEATHER_API_KEY}`);
             const data = await res.json();
             let html = '';
-            for (let i = 0; i < 40; i += 8) { // Pulls 5 days (every 24 hours)
+            for (let i = 0; i < 40; i += 8) {
                 const day = data.list[i];
                 const date = new Date(day.dt * 1000).toLocaleDateString('en', {weekday: 'short'}).toUpperCase();
-                html += `<div><div class="w-day">${date}</div><img src="https://openweathermap.org/img/wn/${day.weather[0].icon}.png" class="w-icon"><div class="w-temp">${Math.round(day.main.temp)}°</div></div>`;
+                html += `
+                    <div class="weather-card">
+                        <div class="w-day">${date}</div>
+                        <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}.png" class="w-icon">
+                        <div class="w-temp">${Math.round(day.main.temp)}°</div>
+                    </div>`;
             }
             document.getElementById('weather-display').innerHTML = html;
-        } catch(e) { document.getElementById('weather-display').innerText = "Weather Warming Up..."; }
+        } catch(e) { console.error(e); }
     }
 
     function flipCard() { const en = document.getElementById('enText'); en.style.display = (en.style.display === 'none' || en.style.display === '') ? 'block' : 'none'; }
@@ -147,13 +156,12 @@
         } catch(e) { console.error(e); }
     }
 
-    // UPDATED DELETE: Removed no-cors to ensure data payloads arrive correctly
     async function deleteItem(d, t, a) {
         if(!confirm("Delete this?")) return;
-        const payload = { action: 'deleteItin', isSB: true, day: d, time: t, activity: a };
+        // POST without no-cors to ensure data is received by Script
         await fetch(SCRIPT_URL, { 
             method: 'POST', 
-            body: JSON.stringify(payload) 
+            body: JSON.stringify({ action: 'deleteItin', isSB: true, day: d, time: t, activity: a }) 
         });
         setTimeout(fetchData, 800);
     }
