@@ -7,14 +7,23 @@
     <style>
         :root { --neon-pink: #ff007f; --ocean-blue: #00d4ff; --sun-yellow: #fdbb2d; --glass: rgba(255, 255, 255, 0.1); }
         body { margin: 0; font-family: 'Impact', sans-serif; background: black; color: white; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
-        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 40px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
+        .hero { background: linear-gradient(to bottom, rgba(0,0,0,0.6), black), url('https://images.unsplash.com/photo-1552074284-5e88ef1aef18?q=80&w=1000&auto=format&fit=crop'); background-size: cover; padding: 30px 10px 10px 10px; text-align: center; border-bottom: 5px solid var(--neon-pink); }
         .main-head { font-size: 4.5rem; line-height: 0.85; text-shadow: 6px 6px var(--neon-pink); margin-bottom: 20px; text-transform: uppercase; }
-        #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 20px; }
+        #countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; font-family: sans-serif; margin-bottom: 15px; }
         .unit span { display: block; font-size: 2.2rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
         
-        /* New Weather Container */
-        .weather-box { width: 100%; max-width: 400px; margin: 10px auto; border-radius: 15px; overflow: hidden; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); }
+        /* Fixed Weather Box - Shorter & Centered */
+        .weather-crop { 
+            width: 320px; 
+            height: 150px; 
+            margin: 0 auto; 
+            overflow: hidden; 
+            border-radius: 15px; 
+            border: 1px solid var(--ocean-blue); 
+            background: rgba(0,0,0,0.5); 
+        }
+        .weather-crop iframe { margin-top: -15px; } /* Pulls the content up to hide widget branding */
 
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
@@ -51,8 +60,8 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     
-    <div class="weather-box">
-        <iframe src="https://www.meteoblue.com/en/weather/widget/three/canc%c3%ban_mexico_3531673?geoloc=fixed&nocurrent=0&nooo=1&days=4&tempunit=FAHRENHEIT&windunit=MILE_PER_HOUR&layout=dark"  frameborder="0" scrolling="NO" allowtransparency="true" style="width: 100%; height: 210px"></iframe>
+    <div class="weather-crop">
+        <iframe src="https://www.meteoblue.com/en/weather/widget/three/canc%c3%ban_mexico_3531673?geoloc=fixed&nocurrent=0&nooo=1&days=4&tempunit=FAHRENHEIT&windunit=MILE_PER_HOUR&layout=dark" frameborder="0" scrolling="NO" allowtransparency="true" style="width: 100%; height: 210px"></iframe>
     </div>
 </div>
 
