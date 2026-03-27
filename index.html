@@ -35,8 +35,7 @@
 
 <div id="overlay">
     <h1 style="color:var(--neon-pink); font-size: 4rem;">MEXICO 2026</h1>
-    <div id="nameList">Waiting for Google Sheets...</div>
-    <button onclick="document.getElementById('overlay').style.display='none'" style="margin-top:20px; background:none; color:white; border:1px solid white; padding:5px; font-size:0.7rem;">SKIP (DEBUG)</button>
+    <div id="nameList">Connecting to Sheet...</div>
 </div>
 
 <div class="hero">
@@ -47,7 +46,7 @@
         <div class="unit"><span id="mins">00</span>MIN</div>
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
-    <a href="https://forecast7.com/en/21d16n86d85/cancun/" style="color:var(--ocean-blue); text-decoration:none; border:1px solid var(--ocean-blue); padding:10px; border-radius:10px;">VIEW CANCUN WEATHER ☀️</a>
+    <a href="https://forecast7.com/en/21d16n86d85/cancun/" style="color:var(--ocean-blue); text-decoration:none; border:1px solid var(--ocean-blue); padding:10px; border-radius:10px;">WEATHER FORECAST ☀️</a>
 </div>
 
 <div class="container">
@@ -59,9 +58,9 @@
                 <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
                 <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
             </select>
-            <input type="text" id="inTime" placeholder="3:00 PM">
-            <input type="text" id="inAct" placeholder="What's the move?">
-            <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
+            <input type="text" id="inTime" placeholder="Time (e.g. 3 PM)">
+            <input type="text" id="inAct" placeholder="Activity">
+            <button onclick="addItin()" class="full-btn">UPDATE GAMEPLAN</button>
         </div>
     </div>
 
@@ -69,13 +68,13 @@
         <h3>😎 CREW VIBE CHECK</h3>
         <div id="vibeList"></div>
         <div class="form-box">
-            <input type="text" id="vibeInput" placeholder="Update your status...">
-            <button onclick="updateVibe()" class="full-btn">UPDATE VIBE</button>
+            <input type="text" id="vibeInput" placeholder="What's your vibe?">
+            <button onclick="updateVibe()" class="full-btn">SET VIBE</button>
         </div>
     </div>
 
     <div class="card">
-        <h3>🇲🇽 BILINGUAL VIBES</h3>
+        <h3>🇲🇽 SPANISH FLASHCARDS</h3>
         <div id="spanishCard" onclick="flipCard()">
             <span id="esText">Tap for Spanish</span>
             <span id="enText"></span>
@@ -95,7 +94,10 @@
     }
 
     function nextPhrase() {
-        if (allPhrases.length === 0) return;
+        if (allPhrases.length === 0) {
+             document.getElementById('esText').innerText = "Add phrases to SB_Phrases tab!";
+             return;
+        }
         const p = allPhrases[Math.floor(Math.random() * allPhrases.length)];
         document.getElementById('esText').innerText = p[0];
         document.getElementById('enText').innerText = p[1];
@@ -107,20 +109,25 @@
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
             
+            // Name Selection Logic
             if (myName) { 
                 document.getElementById('overlay').style.display = 'none'; 
-            } else if (data.status) { 
+            } else if (data.status && data.status.length > 1) { 
                 document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => 
                     `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`
                 ).join(''); 
+            } else {
+                document.getElementById('nameList').innerText = "No names found in SB_Status Column A";
             }
 
+            // Vibe Rendering
             if (data.status) {
                 document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
                     `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
                 ).join('');
             }
 
+            // Itinerary Rendering
             if (data.itinerary) {
                 const rows = data.itinerary;
                 const listDiv = document.getElementById('itinList');
@@ -142,12 +149,16 @@
                 });
             }
 
+            // Phrase Loading
             if (data.phrases && data.phrases.length > 1) {
                 allPhrases = data.phrases.slice(1);
                 nextPhrase();
             }
 
-        } catch(e) { console.error("Fetch Error:", e); }
+        } catch(e) { 
+            console.error("Fetch Error:", e);
+            document.getElementById('nameList').innerText = "Error connecting. Check Script Deployment.";
+        }
     }
 
     async function updateVibe() {
@@ -168,6 +179,7 @@
 
     function setName(n) { localStorage.setItem('mx_name', n); myName = n; fetchData(); }
 
+    // Countdown
     setInterval(() => {
         const diff = new Date("April 13, 2026 16:00:00 EST").getTime() - new Date().getTime();
         document.getElementById('days').innerText = Math.max(0, Math.floor(diff / 86400000)).toString().padStart(2, '0');
