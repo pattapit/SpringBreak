@@ -13,8 +13,8 @@
         .unit span { display: block; font-size: 2.2rem; color: var(--sun-yellow); }
         .unit { font-size: 0.7rem; font-weight: bold; }
         
-        /* Fixed Weather Widget Box */
-        .weather-container { margin: 10px auto; max-width: 350px; background: rgba(0,0,0,0.7); border: 2px solid var(--ocean-blue); border-radius: 15px; overflow: hidden; height: 150px; }
+        /* New Weather Container */
+        .weather-box { width: 100%; max-width: 400px; margin: 10px auto; border-radius: 15px; overflow: hidden; border: 1px solid var(--ocean-blue); background: rgba(0,0,0,0.5); }
 
         .container { padding: 15px; font-family: sans-serif; }
         .card { background: var(--glass); padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
@@ -39,7 +39,7 @@
 
 <div id="overlay">
     <h1 style="color:var(--neon-pink); font-size: 3rem;">MEXICO 2026</h1>
-    <div id="nameList">Connecting to Sheet...</div>
+    <div id="nameList">Connecting...</div>
 </div>
 
 <div class="hero">
@@ -51,8 +51,8 @@
         <div class="unit"><span id="secs">00</span>SEC</div>
     </div>
     
-    <div class="weather-container">
-        <a class="weatherwidget-io" href="https://forecast7.com/en/21d16n86d85/cancun/" data-label_1="CANCUN" data-label_2="WEATHER" data-font="Roboto" data-icons="Climacons Animated" data-mode="Forecast" data-theme="pure" data-basecolor="rgba(0,0,0,0)" data-textcolor="#00d4ff" data-highcolor="#ff007f" data-lowcolor="#fdbb2d" data-suncolor="#fdbb2d" data-mooncolor="#00d4ff" data-cloudcolor="#00d4ff" data-cloudfill="rgba(0,0,0,0)" data-raincolor="#00d4ff" data-snowcolor="#00d4ff" data-units="us" >CANCUN WEATHER</a>
+    <div class="weather-box">
+        <iframe src="https://www.meteoblue.com/en/weather/widget/three/canc%c3%ban_mexico_3531673?geoloc=fixed&nocurrent=0&nooo=1&days=4&tempunit=FAHRENHEIT&windunit=MILE_PER_HOUR&layout=dark"  frameborder="0" scrolling="NO" allowtransparency="true" style="width: 100%; height: 210px"></iframe>
     </div>
 </div>
 
@@ -65,28 +65,28 @@
                 <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
                 <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
             </select>
-            <input type="text" id="inTime" placeholder="Time (e.g. 3 PM)">
-            <input type="text" id="inAct" placeholder="What's the move?">
+            <input type="text" id="inTime" placeholder="Time">
+            <input type="text" id="inAct" placeholder="Activity">
             <button onclick="addItin()" class="full-btn">ADD TO PLAN</button>
         </div>
     </div>
 
     <div class="card">
-        <h3>😎 CREW VIBE CHECK</h3>
+        <h3>😎 CREW VIBES</h3>
         <div id="vibeList"></div>
         <div class="form-box">
-            <input type="text" id="vibeInput" placeholder="Update your status...">
-            <button onclick="updateVibe()" class="full-btn">UPDATE VIBE</button>
+            <input type="text" id="vibeInput" placeholder="Update status...">
+            <button onclick="updateVibe()" class="full-btn">UPDATE</button>
         </div>
     </div>
 
     <div class="card">
-        <h3>🇲🇽 SPANISH FLASHCARDS</h3>
+        <h3>🇲🇽 FLASHCARDS</h3>
         <div id="spanishCard" onclick="flipCard()">
             <span id="esText">Tap for Spanish</span>
             <span id="enText"></span>
         </div>
-        <button onclick="nextPhrase()" class="full-btn" style="background:var(--sun-yellow);">NEXT PHRASE</button>
+        <button onclick="nextPhrase()" class="full-btn" style="background:var(--sun-yellow);">NEXT</button>
     </div>
 </div>
 
@@ -94,9 +94,6 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLu3DlbvYPLJhfzdKItF99DHzZQal9iTFsqPLxXKinMYymqfgyBTsEw0zJ3M3u-xWc/exec'; 
     let myName = localStorage.getItem('mx_name');
     let allPhrases = [];
-
-    // Weather Widget Script
-    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 
     function flipCard() {
         const en = document.getElementById('enText');
@@ -115,21 +112,17 @@
         try {
             const res = await fetch(SCRIPT_URL + '?app=sb&v=' + Date.now());
             const data = await res.json();
-            
-            if (myName) { 
-                document.getElementById('overlay').style.display = 'none'; 
-            } else if (data.status) { 
+            if (myName) { document.getElementById('overlay').style.display = 'none'; } 
+            else if (data.status) { 
                 document.getElementById('nameList').innerHTML = data.status.slice(1).map(row => 
                     `<button class="name-btn" onclick="setName('${row[0]}')">${row[0]}</button>`
                 ).join(''); 
             }
-
             if (data.status) {
                 document.getElementById('vibeList').innerHTML = data.status.slice(1).map(row => 
                     `<div class="vibe-row"><span>${row[0]}</span><span class="vibe-status">${row[1] || '---'}</span></div>`
                 ).join('');
             }
-
             if (data.itinerary) {
                 const rows = data.itinerary;
                 const listDiv = document.getElementById('itinList');
@@ -150,12 +143,10 @@
                     }
                 });
             }
-
             if (data.phrases && data.phrases.length > 1) {
                 allPhrases = data.phrases.slice(1);
                 nextPhrase();
             }
-
         } catch(e) { console.error(e); }
     }
 
